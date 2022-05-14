@@ -1,0 +1,9 @@
+{
+    "erroValidacaoAmeaca": {
+        "tipoAmeaca": "Tipo não informado",
+        "idade": "Idade não informada",
+        "genero": "Gênero não informado",
+        "resideAmeaca": "Residência não informada",
+        "dadosGeograficos": "Dados geográficos não informados"
+    }
+}

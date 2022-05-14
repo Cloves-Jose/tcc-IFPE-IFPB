@@ -1,11 +1,14 @@
 {
   "name": "backend",
+  "jest": {
+    "verbose": true
+  },
   "version": "1.0.0",
   "description": "Projeto para o TCC em parceria com o IFPB",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "Cloves José Duarte Silva",
   "license": "ISC",
@@ -13,6 +16,7 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.20.0",
     "consign": "^0.1.6",
+    "cors": "^2.8.5",
     "express": "^4.18.1",
     "jwt-simple": "^0.5.6",
     "knex": "^0.95.15",
@@ -24,6 +28,7 @@
     "sqlite3": "^5.0.3"
   },
   "devDependencies": {
+    "jest": "^28.1.0",
     "nodemon": "^2.0.16"
   }
 }

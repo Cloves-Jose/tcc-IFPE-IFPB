@@ -7,6 +7,11 @@ const PORT = 3000
 app.db = db
 
 consign()
+    .include('./config/middlewares.js')
+    .then('./api/helpers/validacoes.js')
+    .then('./api/controllers/ameacaController.js')
+    .then('./api')
+    .then('./config/routes.js')
     .into(app)
 
 app.listen(PORT, () => {
