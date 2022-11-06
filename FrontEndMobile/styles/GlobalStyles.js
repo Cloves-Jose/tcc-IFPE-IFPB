@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native'
 
 module.exports = StyleSheet.create({
     container: {
+        marginTop: '2%',
         marginRight: '2%',
         marginLeft: '2%',
     },

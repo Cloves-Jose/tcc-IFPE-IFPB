@@ -10,7 +10,8 @@ import globalStyles from '../../styles/GlobalStyles'
 export default props => {
 
     /**
-     * Renderização dos itens
+     * Renderização dos itens e definindo a rota 
+     * para a tela Info, já passando os parâmetros
      */
     _renderItem = (item) => {
         return(
@@ -18,7 +19,7 @@ export default props => {
                 <ListItem 
                     key={item.id} 
                     bottomDivider
-                    onPress={() => props.navigation.navigate("Info")}
+                    onPress={() => props.navigation.navigate("Info", item)}
                     >
                     <Avatar source={{uri: item.avatar_url}}/>
                     <ListItem.Content>
@@ -37,12 +38,12 @@ export default props => {
     _flatList = (listItens) => {
         return (
             <View style={globalStyles.container}>
-            <FlatList
-                showsVerticalScrollIndicator={false}
-                data={listItens}
-                renderItem={({item}) => _renderItem(item)}
-            />
-        </View>
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    data={listItens}
+                    renderItem={({item}) => _renderItem(item)}
+                />
+            </View>
         )
     }
     
