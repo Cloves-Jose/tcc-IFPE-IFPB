@@ -14,5 +14,6 @@ module.exports = StyleSheet.create({
     subTitle: {
         textAlign: 'justify',
         fontWeight: "bold",
+        color: "#A9A9A9"
     }
 })

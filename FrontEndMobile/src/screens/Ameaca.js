@@ -49,7 +49,7 @@ export default props => {
     
     return (
         <>
-            <View>
+            <View style={{backgroundColor: "#fff", flex: 1}}>
                 <View style={styles.container}>
                     <TitleApp title={textos.ameaca}/>
                 </View>

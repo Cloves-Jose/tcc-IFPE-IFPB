@@ -32,7 +32,23 @@ export default props => {
                 icon={<Icon name="arrow-back" color="#3d72de"/>}
             />
                 <View style={styles.bottomSheet}>
-                    {_infos(props)}
+                    <View style={globalStyles.container}>
+                        <Text style={globalStyles.title}>
+                            {props.route.params.name}
+                        </Text>
+                        <View style={styles.textSpace}>
+                            <Text style={globalStyles.subTitle}>
+                                {props.route.params.subtitle}
+                            </Text>
+                        </View>
+                    </View>
+                    <View style={styles.bottomButton}>
+                        <Button
+                            title={'Registrar ameaça'}
+                            containerStyle={button.bottomButton}
+                            onPress={() => props.navigation.navigate("Formulario", props.route.params)}
+                        />
+                    </View>
                 </View>
             </ImageBackground>
         </View>
@@ -57,6 +73,13 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#fff',
+    },
+    bottomButton: {
+        alignItems: "center"
+    },
+    textSpace: {
+        height: "75%",
+        justifyContent: "center"
     }
 })
 
@@ -72,5 +95,9 @@ const button = {
     buttonStyle: {
         backgroundColor: '#fff',
         borderRadius: 50,
+    },
+    bottomButton: {
+        width: '90%',
+        borderRadius: 10
     }
 }

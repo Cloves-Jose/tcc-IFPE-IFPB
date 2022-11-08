@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ameaca from './screens/Ameaca';
 import Info from './screens/Info';
+import Formulario from './screens/Formulario';
 
 const Stack = createNativeStackNavigator()
 
@@ -17,6 +18,7 @@ export default props => {
                     >
                     <Stack.Screen name="Ameaca" component={Ameaca}/>
                     <Stack.Screen name="Info" component={Info}/>
+                    <Stack.Screen name="Formulario" component={Formulario}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </SafeAreaView>
@@ -25,7 +27,7 @@ export default props => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
     }
 })
 
