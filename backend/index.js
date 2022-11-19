@@ -4,7 +4,9 @@ const app = express()
 const db = require('./config/db')
 
 consign()
-    .then('./config/middlewares')
+    .then('./config/middlewares.js')
+    .then('./api')
+    .then('./config/routes.js')
     .into(app)
 
 app.db = db
