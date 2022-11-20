@@ -13,6 +13,9 @@ import { server, showSuccess, showError } from '../common'
 
 export default props => {
 
+    /**
+     * Alterando o estado para exibição das informações
+     */
     const [ menace, setMenace ] = useState([])
 
     /**
