@@ -32,6 +32,10 @@ export default props => {
         })
     }, [])
 
+    /**
+     * Essa função realiza a renderização dos componentes
+     * da lista
+     */
     _renderItem = (item) => {
         return(
             <>
