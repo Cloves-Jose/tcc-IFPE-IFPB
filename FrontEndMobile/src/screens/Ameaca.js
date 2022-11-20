@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, FlatList, StyleSheet } from "react-native";
 import { ListItem, Avatar } from '@rneui/themed'
 import TextApp from "../components/TextApp";
@@ -7,12 +7,28 @@ import textos from "../../mocks/textos";
 import listItens from "../../mocks/listItens";
 import globalStyles from '../../styles/GlobalStyles'
 
+import axios from 'axios'
+
+import { server, showSuccess, showError } from '../common'
+
 export default props => {
 
+    const [ menace, setMenace ] = useState([])
+
     /**
-     * Renderização dos itens e definindo a rota 
-     * para a tela Info, já passando os parâmetros
+     * Essa função só é executada após a renderização 
+     * do componente.
      */
+    useEffect(() => {
+        axios.get(`${server}/getMenace`)
+        .then((res) => {
+            setMenace(res.data)
+        })
+        .catch(() => {
+            showError()
+        })
+    }, [])
+
     _renderItem = (item) => {
         return(
             <>
@@ -24,7 +40,7 @@ export default props => {
                     <Avatar source={{uri: item.avatar_url}}/>
                     <ListItem.Content>
                         <ListItem.Title style={styles.listTitle}>{item.name}</ListItem.Title>
-                        <ListItem.Subtitle style={styles.listSubtitle}>{item.subtitle}</ListItem.Subtitle>
+                        <ListItem.Subtitle style={styles.listSubtitle}>{item.description}</ListItem.Subtitle>
                     </ListItem.Content>
                     <ListItem.Chevron/>
                 </ListItem>
@@ -57,7 +73,7 @@ export default props => {
                     <TextApp text={textos.subTitle}/>
                 </View>
                 <View style={styles.container}>
-                    {_flatList(listItens)}
+                    {_flatList(menace)}
                 </View>
             </View>
         </>

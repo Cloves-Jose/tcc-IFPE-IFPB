@@ -38,7 +38,7 @@ export default props => {
                         </Text>
                         <View style={styles.textSpace}>
                             <Text style={globalStyles.subTitle}>
-                                {props.route.params.subtitle}
+                                {props.route.params.description}
                             </Text>
                         </View>
                     </View>
