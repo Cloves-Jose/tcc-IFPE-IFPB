@@ -1,5 +1,12 @@
 module.exports = app => {
 
+    /**
+     * Registrando uma nova ameaça (mobile)
+     * 
+     * @param {req.body} req 
+     * @param {res.status} res 
+     * @returns 
+     */
     const save = (req, res) => {
 
         if(!req.body.age.trim()) {
