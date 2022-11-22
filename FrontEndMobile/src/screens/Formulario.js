@@ -1,40 +1,33 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, Modal, TextInput } from 'react-native'
+import { View, Text, StyleSheet, Modal, TextInput, Button, Alert } from 'react-native'
 import { Input, CheckBox } from "@rneui/themed"
 import globalStyles from '../../styles/GlobalStyles'
 import textos from '../../mocks/textos'
 
 export default props => {
-    // console.warn(props)
+    // console.warn(props.route.params.id)
 
-    const [modalVisible, setModalVisible] = useState(false);
     const [checkbox, setCheck] = useState(false)
+    // const [modalVisible, setModalVisible] = useState(false)
 
-    /**
-     * Terminar modal
-     */
-    _modal = () => {
-        return(
-            <>
-                <View>
-                    <Modal
-                        animationType='slide'
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={() => {
-                            setModalVisible(!modalVisible)
-                        }}
-                    >
-                        <View>
-
-                        </View>
-
-                    </Modal>
-                </View>
-            </>
-        )
-    }
-
+    // _modal = () => {
+    //     return (
+    //         <>
+    //             <View>
+    //                 <Modal
+    //                     animationType='slide'
+    //                     transparent={true}
+    //                     visible={modalVisible}
+    //                     onRequestClose={() => {
+    //                         Alert.alert("Modal fechado")
+    //                         setModalVisible(!modalVisible)
+    //                     }}
+    //                 />
+    //             </View>
+    //         </>
+    //     )
+    // }
+    
     _formThreat = () => {
         return (
             <>
@@ -49,6 +42,10 @@ export default props => {
                     <View>
                         <Text style={[styles.titleLabel, {marginBottom: "2%"}]}>Faça uma descrição sobre a ameaça</Text>
                     </View>
+                    {/* <Button
+                        title={'Descrição'}
+                        onPress={() => setModalVisible(true)}
+                    /> */}
                     <TextInput
                         style={styles.textInput}
                         multiline={true}
@@ -66,7 +63,7 @@ export default props => {
         return (
             <>  
                 <View style={styles.inputContainer}>
-                    <View>
+                    <View style={styles.inputTitle}>
                         <View style={styles.label}>
                             <Text style={styles.titleLabel}>Idade</Text>
                         </View>
@@ -103,7 +100,7 @@ export default props => {
                 </View>
                 <View style={styles.typeContainer}>
                     <Text style={styles.typeSubtitle}>Tipo de ameaça</Text>
-                    <Text style={globalStyles.subTitle}>Queimadas</Text>
+                    <Text style={globalStyles.subTitle}>{props.route.params.name}</Text>
                 </View>
                 <View style={styles.lineContainer}>
                     <View style={styles.line}></View>
@@ -157,7 +154,8 @@ const styles = StyleSheet.create({
         marginBottom: "0.5%"
     },
     titleLabel: {
-        fontWeight: "700"
+        fontWeight: "700",
+        marginLeft: '2.5%'
     },
     input: {
         backgroundColor: "#DCDCDC",
@@ -172,4 +170,5 @@ const styles = StyleSheet.create({
 const inputStyle = {
     borderBottomColor: "transparent"
 }
+
 

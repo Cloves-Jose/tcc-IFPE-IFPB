@@ -44,7 +44,7 @@ export default props => {
                     bottomDivider
                     onPress={() => props.navigation.navigate("Info", item)}
                     >
-                    <Avatar source={{uri: item.avatar_url}}/>
+                    <Avatar source={{uri: item.photo}}/>
                     <ListItem.Content>
                         <ListItem.Title style={styles.listTitle}>{item.name}</ListItem.Title>
                         <ListItem.Subtitle style={styles.listSubtitle}>{item.description}</ListItem.Subtitle>

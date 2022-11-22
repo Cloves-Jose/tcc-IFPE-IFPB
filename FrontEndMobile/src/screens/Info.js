@@ -21,7 +21,7 @@ export default props => {
     return (
         <View style={styles.container}>
             <ImageBackground 
-                source={{uri: props.route.params.avatar_url}}
+                source={{uri: props.route.params.photo}}
                 resizeMode="cover"
                 style={styles.image}
             >   
@@ -79,7 +79,8 @@ const styles = StyleSheet.create({
     },
     textSpace: {
         height: "75%",
-        justifyContent: "center"
+        justifyContent: "center",
+        alignItems: "center"
     }
 })
 
