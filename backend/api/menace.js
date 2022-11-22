@@ -9,7 +9,9 @@ module.exports = app => {
     const getMenace = (req, res) => {
         app.db('menace')
             .select({
+                id: 'id',
                 name: 'name',
+                photo: 'photo',
                 description: 'description'
             })
             .then((menace) => {
@@ -40,9 +42,10 @@ module.exports = app => {
         app.db('menace')
             .insert({
                 name: req.body.name,
+                photo: req.body.photo,
                 description: req.body.description
             })
-            .then(_ => res.status(204).send())
+            .then(_ => res.status(201).send())
             .catch(err => res.status(400).json(err))
     }
 
