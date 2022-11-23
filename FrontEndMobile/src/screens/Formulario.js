@@ -1,5 +1,14 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, Modal, TextInput, Button, Alert } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { 
+    View, 
+    Text, 
+    StyleSheet, 
+    Modal, 
+    TextInput, 
+    Button, 
+    Alert, 
+    PermissionsAndroid} from 'react-native'
+import Geolocation from 'react-native-geolocation-service'
 import { Input, CheckBox } from "@rneui/themed"
 import globalStyles from '../../styles/GlobalStyles'
 import textos from '../../mocks/textos'
@@ -8,25 +17,60 @@ export default props => {
     // console.warn(props.route.params.id)
 
     const [checkbox, setCheck] = useState(false)
-    // const [modalVisible, setModalVisible] = useState(false)
+    const [location, setLocation] = useState(false)
 
-    // _modal = () => {
-    //     return (
-    //         <>
-    //             <View>
-    //                 <Modal
-    //                     animationType='slide'
-    //                     transparent={true}
-    //                     visible={modalVisible}
-    //                     onRequestClose={() => {
-    //                         Alert.alert("Modal fechado")
-    //                         setModalVisible(!modalVisible)
-    //                     }}
-    //                 />
-    //             </View>
-    //         </>
-    //     )
-    // }
+    /**
+     * Função para pegar a permissão de localização
+     */
+    const requestLocationPermission = async () => {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                {
+                    title: 'Concede acesso para localização ?',
+                    buttonNeutral: 'Me pergunte mais tarde',
+                    buttonNegative: 'Cancelar',
+                    buttonPositive: 'OK'
+                },
+            )
+            console.warn('granted', granted)
+
+            if(granted === 'granted') {
+                return true
+            } else {
+                return false
+            }
+        } catch (err) {
+            return false
+        }
+    }
+
+    /**
+     * Função para checar as permissões e pegar 
+     * a localização atual
+     */
+    const getLocation = () => {
+        const result = requestLocationPermission()
+
+        result.then(res => {
+            if( res ) {
+                Geolocation.getCurrentPosition(
+                    position => {
+                        setLocation(position)
+                    },
+                    error => {
+                        /**
+                         * Exibe os erros caso ocorram
+                         */
+                        setLocation(false)
+                    },
+                    {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000}
+                )
+            }
+        })
+        return location
+    }
+
     
     _formThreat = () => {
         return (
@@ -91,6 +135,7 @@ export default props => {
     }
     
     return (
+        console.warn(getLocation),
         <>
         <View style={{backgroundColor: "#fff", flex: 1}}>
             <View style={globalStyles.container}>
