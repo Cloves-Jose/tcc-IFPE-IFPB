@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { 
     View, 
     Text, 
-    StyleSheet, 
-    Modal, 
-    TextInput, 
-    Button, 
-    Alert, 
+    StyleSheet,
+    TouchableHighlight,
+    Button,
+    ScrollView,
     PermissionsAndroid} from 'react-native'
 import Geolocation from 'react-native-geolocation-service'
+import { Icon } from '@rneui/themed';
 import { Input, CheckBox } from "@rneui/themed"
 import globalStyles from '../../styles/GlobalStyles'
 import textos from '../../mocks/textos'
@@ -33,8 +33,6 @@ export default props => {
                     buttonPositive: 'OK'
                 },
             )
-            console.warn('granted', granted)
-
             if(granted === 'granted') {
                 return true
             } else {
@@ -62,7 +60,7 @@ export default props => {
                         /**
                          * Exibe os erros caso ocorram
                          */
-                        setLocation(false)
+                        setLocation(error)
                     },
                     {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000}
                 )
@@ -86,17 +84,29 @@ export default props => {
                     <View>
                         <Text style={[styles.titleLabel, {marginBottom: "2%"}]}>Faça uma descrição sobre a ameaça</Text>
                     </View>
-                    {/* <Button
+                    <Button
                         title={'Descrição'}
-                        onPress={() => setModalVisible(true)}
-                    /> */}
-                    <TextInput
+                    />
+                    {/* <TextInput
                         style={styles.textInput}
                         multiline={true}
                         numberOfLines={5}
-                    />
+                    /> */}
                     <View style={{marginTop: "3%"}}>
                         <Text style={styles.titleLabel}>Anexar uma imagem</Text>
+                    </View>
+                    <View style={styles.photo}>
+                        <TouchableHighlight>
+                            <View style={styles.touchable}>
+                                <View>
+                                    <Icon name='add-a-photo' />
+                                </View>
+                            </View>
+                        </TouchableHighlight>
+                        <View>
+                            <Text>Clique no ícone da camera para </Text>
+                            <Text>adicionar uma foto</Text>
+                        </View>
                     </View>
                 </View>
             </>
@@ -114,6 +124,7 @@ export default props => {
                         <Input
                             style={styles.input}
                             inputContainerStyle={inputStyle}
+                            placeholder='Digite a idade'
                             keyboardType={'numeric'}
                             maxLength={2}
                         />
@@ -124,8 +135,8 @@ export default props => {
                         </View>
                         <Input
                             style={styles.input}
+                            placeholder='Selecione o sexo'
                             inputContainerStyle={inputStyle}
-                            onPressIn={() => setModalVisible(true)}
                             disabled={false}
                         />
                     </View>
@@ -135,33 +146,41 @@ export default props => {
     }
     
     return (
-        console.warn(getLocation),
         <>
-        <View style={{backgroundColor: "#fff", flex: 1}}>
-            <View style={globalStyles.container}>
-                <View>
-                    <Text style={globalStyles.title}>{textos.registraAmeaca}</Text>
-                    <Text style={globalStyles.subTitle}>{textos.subTitle}</Text>
-                </View>
-                <View style={styles.typeContainer}>
-                    <Text style={styles.typeSubtitle}>Tipo de ameaça</Text>
-                    <Text style={globalStyles.subTitle}>{props.route.params.name}</Text>
-                </View>
-                <View style={styles.lineContainer}>
-                    <View style={styles.line}></View>
-                </View>
-                <View style={styles.info}>
-                    <Text style={styles.subTitle}>Informações pessoais</Text>
-                </View>
-                <View>
-                    {_formUser()}
-                </View>
-                <View style={styles.info}>
-                    <Text style={styles.subTitle}>Sobre a ameça</Text>
-                </View>
-                    {_formThreat()}
+            <View style={{backgroundColor: "#fff", flex: 1}}>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                >
+                    <View style={globalStyles.container}>
+                        <View>
+                            <Text style={globalStyles.title}>{textos.registraAmeaca}</Text>
+                            <Text style={globalStyles.subTitle}>{textos.subTitle}</Text>
+                        </View>
+                        <View style={styles.typeContainer}>
+                            <Text style={styles.typeSubtitle}>Tipo de ameaça</Text>
+                            <Text style={globalStyles.subTitle}>{props.route.params.name}</Text>
+                        </View>
+                        <View style={styles.lineContainer}>
+                            <View style={styles.line}></View>
+                        </View>
+                        <View style={styles.info}>
+                            <Text style={styles.subTitle}>Informações pessoais</Text>
+                        </View>
+                        <View>
+                            {_formUser()}
+                        </View>
+                        <View style={styles.info}>
+                            <Text style={styles.subTitle}>Sobre a ameça</Text>
+                        </View>
+                            {_formThreat()}
+                        <View>
+                            <Button 
+                                title='Enviar'
+                            />
+                        </View>
+                    </View>
+                </ScrollView>
             </View>
-        </View>
         </>
     )
 }
@@ -209,6 +228,20 @@ const styles = StyleSheet.create({
     textInput: {
         backgroundColor: "#DCDCDC",
         borderRadius: 5
+    },
+    touchable: {
+        height: 70,
+        width: 70,
+        backgroundColor: '#DCDCDC',
+        justifyContent: 'center',
+        marginTop: '1.5%',
+        marginBottom: '2%',
+        marginLeft: '7%',
+        borderRadius: 10,
+    },
+    photo: {
+        flexDirection: 'row',
+        alignItems: 'center'
     }
 })
 
