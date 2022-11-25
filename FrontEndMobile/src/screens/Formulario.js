@@ -4,10 +4,11 @@ import {
     Text, 
     StyleSheet,
     TouchableHighlight,
-    Button,
     ScrollView,
     PermissionsAndroid} from 'react-native'
 import Geolocation from 'react-native-geolocation-service'
+import { RNCamera } from 'react-native-camera'
+import { Button} from "@rneui/themed"
 import { Icon } from '@rneui/themed';
 import { Input, CheckBox } from "@rneui/themed"
 import globalStyles from '../../styles/GlobalStyles'
@@ -15,6 +16,7 @@ import textos from '../../mocks/textos'
 
 export default props => {
     // console.warn(props.route.params.id)
+    
 
     const [checkbox, setCheck] = useState(false)
     const [location, setLocation] = useState(false)
@@ -84,28 +86,28 @@ export default props => {
                     <View>
                         <Text style={[styles.titleLabel, {marginBottom: "2%"}]}>Faça uma descrição sobre a ameaça</Text>
                     </View>
-                    <Button
-                        title={'Descrição'}
-                    />
-                    {/* <TextInput
-                        style={styles.textInput}
-                        multiline={true}
-                        numberOfLines={5}
-                    /> */}
+                    <View style={{alignItems: "center"}}>
+                        <Button
+                            containerStyle={button.bottomButton}
+                            title={'Descrição'}
+                        />
+                    </View>
                     <View style={{marginTop: "3%"}}>
                         <Text style={styles.titleLabel}>Anexar uma imagem</Text>
                     </View>
-                    <View style={styles.photo}>
-                        <TouchableHighlight>
-                            <View style={styles.touchable}>
-                                <View>
-                                    <Icon name='add-a-photo' />
+                    <View>
+                        <View style={styles.photo}>
+                            <TouchableHighlight>
+                                <View style={styles.touchable}>
+                                    <View>
+                                        <Icon name='add-a-photo' />
+                                    </View>
                                 </View>
+                            </TouchableHighlight>
+                            <View>
+                                <Text style={styles.legendPhoto}>Clique no ícone da camera para </Text>
+                                <Text style={styles.legendPhoto}>adicionar uma foto</Text>
                             </View>
-                        </TouchableHighlight>
-                        <View>
-                            <Text>Clique no ícone da camera para </Text>
-                            <Text>adicionar uma foto</Text>
                         </View>
                     </View>
                 </View>
@@ -133,12 +135,14 @@ export default props => {
                         <View>
                             <Text style={styles.titleLabel}>Sexo</Text>
                         </View>
-                        <Input
-                            style={styles.input}
-                            placeholder='Selecione o sexo'
-                            inputContainerStyle={inputStyle}
-                            disabled={false}
-                        />
+                        <TouchableHighlight>
+                            <Input
+                                style={styles.input}
+                                placeholder='Selecione o sexo'
+                                inputContainerStyle={inputStyle}
+                                disabled={false}
+                            />
+                        </TouchableHighlight>
                     </View>
                 </View>
             </>
@@ -173,8 +177,10 @@ export default props => {
                             <Text style={styles.subTitle}>Sobre a ameça</Text>
                         </View>
                             {_formThreat()}
-                        <View>
+                        <View style={{alignItems: "center", marginTop: "2%", marginBottom: "2%"}}>
                             <Button 
+                                containerStyle={button.bottomButton}
+                                color="#40DE3D"
                                 title='Enviar'
                             />
                         </View>
@@ -242,11 +248,24 @@ const styles = StyleSheet.create({
     photo: {
         flexDirection: 'row',
         alignItems: 'center'
+    },
+    legendPhoto: {
+        fontSize: 14,
+        fontWeight: "600",
+        color: "#DCDCDC"
     }
 })
 
 const inputStyle = {
     borderBottomColor: "transparent"
 }
+
+const button = {
+    bottomButton: {
+        width: '90%',
+        borderRadius: 10
+    }
+}
+
 
 
