@@ -13,13 +13,38 @@ import { Icon } from '@rneui/themed';
 import { Input, CheckBox } from "@rneui/themed"
 import globalStyles from '../../styles/GlobalStyles'
 import textos from '../../mocks/textos'
+import axios from 'axios'
+import { server, showError, showSuccess } from '../common'
 
 export default props => {
-    // console.warn(props.route.params.id)
-    
 
     const [checkbox, setCheck] = useState(false)
-    const [location, setLocation] = useState(false)
+    const [latitude, setLatitude] = useState(null)
+    const [longitude, setLongitude] = useState(null)
+    const [age, setAge] = useState(null)
+    const [sex, setSex] = useState(null)
+    const [description, setDescription] = useState(null)
+
+    /**
+     * Enviando requisição para a API
+     */
+    const submit = async () => {
+        try{
+            await axios.post(`${server}/registerMenace`, {
+                age: age,
+                sex: sex,
+                reside_menace: checkbox,
+                description: "É uma bela ameaça",
+                image: "image",
+                latitude: latitude,
+                longitude: longitude,
+                menace_id: props.route.params.id
+            })
+            showSuccess(`Ameaça cadastrada com sucesso!`)
+        } catch(e) {
+            showError(`Não foi possível cadastrar a ameaça ${e}`)
+        }
+    }
 
     /**
      * Função para pegar a permissão de localização
@@ -56,7 +81,8 @@ export default props => {
             if( res ) {
                 Geolocation.getCurrentPosition(
                     position => {
-                        setLocation(position)
+                        setLatitude(position.coords.latitude)
+                        setLongitude(position.coords.longitude)
                     },
                     error => {
                         /**
@@ -68,88 +94,19 @@ export default props => {
                 )
             }
         })
-        return location
+        return {latitude: latitude, longitude: longitude}
     }
 
     
-    _formThreat = () => {
-        return (
-            <>
-                <View>
-                    <CheckBox
-                        title="Você reside na localização da ameaça?"
-                        checkedIcon={"dot-circle-o"}
-                        uncheckedIcon="circle-o"
-                        checked={checkbox}
-                        onPress={() => setCheck(!checkbox)}
-                    />
-                    <View>
-                        <Text style={[styles.titleLabel, {marginBottom: "2%"}]}>Faça uma descrição sobre a ameaça</Text>
-                    </View>
-                    <View style={{alignItems: "center"}}>
-                        <Button
-                            containerStyle={button.bottomButton}
-                            title={'Descrição'}
-                        />
-                    </View>
-                    <View style={{marginTop: "3%"}}>
-                        <Text style={styles.titleLabel}>Anexar uma imagem</Text>
-                    </View>
-                    <View>
-                        <View style={styles.photo}>
-                            <TouchableHighlight>
-                                <View style={styles.touchable}>
-                                    <View>
-                                        <Icon name='add-a-photo' />
-                                    </View>
-                                </View>
-                            </TouchableHighlight>
-                            <View>
-                                <Text style={styles.legendPhoto}>Clique no ícone da camera para </Text>
-                                <Text style={styles.legendPhoto}>adicionar uma foto</Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-            </>
-        )
-    }
-    
-    _formUser = () => {
-        return (
-            <>  
-                <View style={styles.inputContainer}>
-                    <View style={styles.inputTitle}>
-                        <View style={styles.label}>
-                            <Text style={styles.titleLabel}>Idade</Text>
-                        </View>
-                        <Input
-                            style={styles.input}
-                            inputContainerStyle={inputStyle}
-                            placeholder='Digite a idade'
-                            keyboardType={'numeric'}
-                            maxLength={2}
-                        />
-                    </View>
-                    <View>
-                        <View>
-                            <Text style={styles.titleLabel}>Sexo</Text>
-                        </View>
-                        <TouchableHighlight>
-                            <Input
-                                style={styles.input}
-                                placeholder='Selecione o sexo'
-                                inputContainerStyle={inputStyle}
-                                disabled={false}
-                            />
-                        </TouchableHighlight>
-                    </View>
-                </View>
-            </>
-        )
-    }
-    
     return (
+        /**
+         * Pega a posição do usuário
+         */
+        getLocation(),
+
+        /**
+         * Formulário
+         */
         <>
             <View style={{backgroundColor: "#fff", flex: 1}}>
                 <ScrollView
@@ -161,27 +118,94 @@ export default props => {
                             <Text style={globalStyles.subTitle}>{textos.subTitle}</Text>
                         </View>
                         <View style={styles.typeContainer}>
-                            <Text style={styles.typeSubtitle}>Tipo de ameaça</Text>
+                            <Text style={styles.typeSubtitle}>{textos.tipoDeAmeaca}</Text>
                             <Text style={globalStyles.subTitle}>{props.route.params.name}</Text>
                         </View>
                         <View style={styles.lineContainer}>
                             <View style={styles.line}></View>
                         </View>
                         <View style={styles.info}>
-                            <Text style={styles.subTitle}>Informações pessoais</Text>
+                            <Text style={styles.subTitle}>{textos.informacoesPessoais}</Text>
                         </View>
                         <View>
-                            {_formUser()}
+                        <View style={styles.inputContainer}>
+                            <View style={styles.inputTitle}>
+                                <View style={styles.label}>
+                                    <Text style={styles.titleLabel}>{textos.idade}</Text>
+                                </View>
+                                <Input
+                                    style={styles.input}
+                                    inputContainerStyle={inputStyle}
+                                    placeholder='Digite a idade'
+                                    keyboardType={'numeric'}
+                                    maxLength={2}
+                                    onChangeText={age => setAge(age)}
+                                />
+                            </View>
+                            <View>
+                                <View>
+                                    <Text style={styles.titleLabel}>{textos.sexo}</Text>
+                                </View>
+                                <TouchableHighlight>
+                                    <Input
+                                        style={styles.input}
+                                        placeholder={textos.selecioneSexo}
+                                        inputContainerStyle={inputStyle}
+                                        disabled={false}
+                                        onChangeText={sex => setSex(sex)}
+                                    />
+                                </TouchableHighlight>
+                            </View>
+                        </View>
                         </View>
                         <View style={styles.info}>
-                            <Text style={styles.subTitle}>Sobre a ameça</Text>
+                            <Text style={styles.subTitle}>{textos.sobreAmeaca}</Text>
                         </View>
-                            {_formThreat()}
+                        <View>
+                            <CheckBox
+                                title={textos.voceReside}
+                                checkedIcon={"dot-circle-o"}
+                                uncheckedIcon="circle-o"
+                                checked={checkbox}
+                                onPress={() => setCheck(!checkbox)}
+                            />
+                            <View>
+                                <Text style={[styles.titleLabel, {marginBottom: "2%"}]}>Faça uma descrição sobre a ameaça</Text>
+                            </View>
+                            <View style={{alignItems: "center"}}>
+                                <Button
+                                    containerStyle={button.bottomButton}
+                                    title={'Descrição'}
+                                />
+                            </View>
+                            <View style={{marginTop: "3%"}}>
+                                <Text style={styles.titleLabel}>{textos.anexarImagem}</Text>
+                            </View>
+                            <View>
+                                <View style={styles.photo}>
+                                    <TouchableHighlight>
+                                        <View style={styles.touchable}>
+                                            <View>
+                                                <Icon name='add-a-photo' />
+                                            </View>
+                                        </View>
+                                    </TouchableHighlight>
+                                    <View>
+                                        <Text style={styles.legendPhoto}>{textos.cliqueIconeCamera}</Text>
+                                        <Text style={styles.legendPhoto}>{textos.adicionaFoto}</Text>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
                         <View style={{alignItems: "center", marginTop: "2%", marginBottom: "2%"}}>
                             <Button 
                                 containerStyle={button.bottomButton}
                                 color="#40DE3D"
                                 title='Enviar'
+                                onPress={() => {
+                                    submit()
+                                    props.navigation.navigate("Ameaca")
+                                }}
                             />
                         </View>
                     </View>
