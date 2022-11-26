@@ -12,7 +12,7 @@ exports.up = function(knex) {
         table.string('image').nullable(),
         table.string('latitude').notNull(),
         table.string('longitude').notNull(),
-        table.integer('menace_id').unsigned().unique().references('menace.id')
+        table.integer('menace_id').unsigned().references('menace.id')
     })
 };
 
