@@ -5,7 +5,10 @@ import {
     StyleSheet,
     TouchableHighlight,
     ScrollView,
-    PermissionsAndroid} from 'react-native'
+    PermissionsAndroid,
+    Modal,
+    Alert
+} from 'react-native'
 import Geolocation from 'react-native-geolocation-service'
 import { RNCamera } from 'react-native-camera'
 import { Button} from "@rneui/themed"
@@ -24,6 +27,7 @@ export default props => {
     const [age, setAge] = useState(null)
     const [sex, setSex] = useState(null)
     const [description, setDescription] = useState(null)
+    const [modalVisible, setModalVisible] = useState(false)
 
     /**
      * Enviando requisição para a API
@@ -34,7 +38,7 @@ export default props => {
                 age: age,
                 sex: sex,
                 reside_menace: checkbox,
-                description: "É uma bela ameaça",
+                description: description,
                 image: "image",
                 latitude: latitude,
                 longitude: longitude,
@@ -45,6 +49,8 @@ export default props => {
             showError(`Não foi possível cadastrar a ameaça ${e}`)
         }
     }
+
+    
 
     /**
      * Função para pegar a permissão de localização
@@ -96,7 +102,6 @@ export default props => {
         })
         return {latitude: latitude, longitude: longitude}
     }
-
     
     return (
         /**
@@ -107,7 +112,38 @@ export default props => {
         /**
          * Formulário
          */
-        <>
+        <>  
+            {/* Modal de descrição */}
+            <View style={styles.modal}>
+                <Modal
+                    animationType='slide'
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert("Modal has been closed")
+                        setModalVisible(!modalVisible)
+                    }}
+                >
+                    <View style={styles.centeredModal}>
+                        <View style={styles.modalView}>
+                            <Input
+                                style={styles.input}
+                                inputContainerStyle={inputStyle}
+                                placeholder='Digite uma descrição'
+                                maxLength={100}
+                                onChangeText={description => setDescription(description)}
+                            />
+                            <Button
+                                title={'Ok'}
+                                containerStyle={button.bottomButton}
+                                onPress={() => setModalVisible(!modalVisible)}
+                            />
+                        </View>
+                    </View>
+                </Modal>
+            </View>
+            
+            {/* Formulário de cadastro de ameaça */}
             <View style={{backgroundColor: "#fff", flex: 1}}>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
@@ -176,6 +212,9 @@ export default props => {
                                 <Button
                                     containerStyle={button.bottomButton}
                                     title={'Descrição'}
+                                    onPress ={() => {
+                                        setModalVisible(true)
+                                    }}
                                 />
                             </View>
                             <View style={{marginTop: "3%"}}>
@@ -277,6 +316,33 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: "600",
         color: "#DCDCDC"
+    },
+    modal: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    centeredModal: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22,
+        flexDirection: "row",
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        width: "90%"
     }
 })
 
