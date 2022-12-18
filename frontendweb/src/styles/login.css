@@ -35,5 +35,10 @@
 
 }
 .rigthSide {
-    background-color: red;
+    
+    margin-left: 15%;
+}
+.titleLogin {
+    font-size: 2em;
+    font-weight: bold;
 }
