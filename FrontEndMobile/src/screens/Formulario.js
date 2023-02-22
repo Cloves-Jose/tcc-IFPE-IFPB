@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { LogBox } from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
 import { 
     View, 
     Text, 
@@ -28,6 +30,21 @@ export default props => {
     const [sex, setSex] = useState(null)
     const [description, setDescription] = useState(null)
     const [modalVisible, setModalVisible] = useState(false)
+
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState(null);
+    const [items, setItems] = useState([
+        {id: '2', label: 'Feminino', value: 'F'},
+        {id: '3', label: 'Não binário', value: 'NB'},
+        {id: '1', label: 'Masculino', value: 'M'},
+    ])
+
+    /**
+     * Ignora o log de erro das listas
+     */
+    useEffect(() => {
+        LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
+    })
 
     /**
      * Enviando requisição para a API
@@ -182,15 +199,35 @@ export default props => {
                                 <View>
                                     <Text style={styles.titleLabel}>{textos.sexo}</Text>
                                 </View>
-                                <TouchableHighlight>
+                                <DropDownPicker
+                                    style={[styles.input, inputStyle]}
+                                    containerStyle={{
+                                        width: "96%",
+                                        marginLeft: "2%",
+                                    }}
+                                    labelStyle={{
+                                        color: ""
+                                    }}
+                                    placeholder={textos.selecioneGenero}
+                                    open={open}
+                                    value={value}
+                                    items={items}
+                                    setOpen={setOpen}
+                                    setValue={setValue}
+                                    setItems={setItems}
+                                    onSelectItem={(item) => {
+                                        setSex(item.value)
+                                    }}
+                                />
+                                {/* <TouchableHighlight>
                                     <Input
                                         style={styles.input}
-                                        placeholder={textos.selecioneSexo}
+                                        placeholder={textos.selecioneGenero}
                                         inputContainerStyle={inputStyle}
                                         disabled={false}
                                         onChangeText={sex => setSex(sex)}
                                     />
-                                </TouchableHighlight>
+                                </TouchableHighlight> */}
                             </View>
                         </View>
                         </View>
