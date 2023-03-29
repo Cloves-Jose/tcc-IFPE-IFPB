@@ -9,11 +9,9 @@ import {
     ScrollView,
     PermissionsAndroid,
     Modal,
-    Alert
 } from 'react-native'
 import Geolocation from 'react-native-geolocation-service'
-import { RNCamera } from 'react-native-camera'
-import { Button} from "@rneui/themed"
+import { Button } from "@rneui/themed"
 import { Icon } from '@rneui/themed';
 import { Input, CheckBox } from "@rneui/themed"
 import globalStyles from '../../styles/GlobalStyles'
@@ -23,22 +21,31 @@ import { server, showError, showSuccess } from '../common'
 
 export default props => {
 
+    /**
+     * Formulário
+     */
     const [checkbox, setCheck] = useState(false)
     const [latitude, setLatitude] = useState(null)
     const [longitude, setLongitude] = useState(null)
-    const [age, setAge] = useState(null)
-    const [sex, setSex] = useState(null)
+    const [age, setAge] = useState('')
+    const [sex, setSex] = useState('')
     const [description, setDescription] = useState(null)
     const [modalVisible, setModalVisible] = useState(false)
 
+    const [sexError , setSexError] = useState('')
+    const [ageError, setAgeError] = useState('')
+
+    /**
+     * Dropdown
+     */
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
     const [items, setItems] = useState([
-        {id: '2', label: 'Feminino', value: 'F'},
-        {id: '3', label: 'Não binário', value: 'NB'},
-        {id: '1', label: 'Masculino', value: 'M'},
+        {id: '1', label: 'Feminino', value: 'F'},
+        {id: '2', label: 'Masculino', value: 'M'},
+        {id: '3', label: 'Outros', value: 'NB'},
     ])
-
+    
     /**
      * Ignora o log de erro das listas
      */
@@ -67,7 +74,26 @@ export default props => {
         }
     }
 
-    
+    /**
+     * Realizar a validação dos campos antes do envio para API
+     */
+    const handleSubmit = () => {
+        let ageValidation = false
+
+        if(age.length == 0) {
+            setAgeError("Idade é um campo obrigatório")
+        }
+        else if(age.indexOf(' ') >= 0) {
+            setAgeError("Idade é um campo obrigatório")
+        }
+        else {
+            setAgeError("")
+            ageValidation = true
+            
+            submit()
+            props.navigation.navigate("Ameaca")
+        }
+    }
 
     /**
      * Função para pegar a permissão de localização
@@ -137,7 +163,6 @@ export default props => {
                     transparent={true}
                     visible={modalVisible}
                     onRequestClose={() => {
-                        Alert.alert("Modal has been closed")
                         setModalVisible(!modalVisible)
                     }}
                 >
@@ -191,6 +216,8 @@ export default props => {
                                     inputContainerStyle={inputStyle}
                                     placeholder='Digite a idade'
                                     keyboardType={'numeric'}
+                                    errorMessage={ageError}
+                                    errorStyle={styles.inputError}
                                     maxLength={2}
                                     onChangeText={age => setAge(age)}
                                 />
@@ -219,15 +246,6 @@ export default props => {
                                         setSex(item.value)
                                     }}
                                 />
-                                {/* <TouchableHighlight>
-                                    <Input
-                                        style={styles.input}
-                                        placeholder={textos.selecioneGenero}
-                                        inputContainerStyle={inputStyle}
-                                        disabled={false}
-                                        onChangeText={sex => setSex(sex)}
-                                    />
-                                </TouchableHighlight> */}
                             </View>
                         </View>
                         </View>
@@ -279,8 +297,7 @@ export default props => {
                                 color="#40DE3D"
                                 title='Enviar'
                                 onPress={() => {
-                                    submit()
-                                    props.navigation.navigate("Ameaca")
+                                    handleSubmit()
                                 }}
                             />
                         </View>
@@ -380,6 +397,9 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5,
         width: "90%"
+    },
+    inputError: {
+        color: "red"
     }
 })
 

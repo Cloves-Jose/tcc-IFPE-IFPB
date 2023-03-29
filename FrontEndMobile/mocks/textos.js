@@ -5,7 +5,7 @@ const ameaca = {
     tipoDeAmeaca: "Tipo de ameaça",
     informacoesPessoais: "Informações pessoais",
     idade: "Idade",
-    sexo: "Gênero",
+    sexo: "Identidade de gênero",
     selecioneGenero: "Selecione o gênero",
     sobreAmeaca: "Sobre a ameça",
     voceReside: "Você reside na localização da ameaça?",
