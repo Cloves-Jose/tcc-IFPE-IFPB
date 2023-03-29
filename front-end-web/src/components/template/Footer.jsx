@@ -3,8 +3,8 @@ import "./Footer.css"
 
 export default (props) => {
     return (
-        <footer className="container">
-
+        <footer className="footer">
+            Rodapé
         </footer>
     )
 }

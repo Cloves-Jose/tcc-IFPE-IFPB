@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import App from '../src/main/App';
 import reportWebVitals from './reportWebVitals';
 import { ProSidebarProvider } from 'react-pro-sidebar'
 
