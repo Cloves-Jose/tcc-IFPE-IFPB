@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import "./Home.css"
+import "./Map.css"
 import mapboxgl from "mapbox-gl";
 import { useRef, useState } from "react";
 
@@ -9,9 +9,9 @@ export default (props) => {
     const mapContainer = useRef(null)
     const map = useRef(null)
 
-    const [lng, setLgn] = useState(-70.9);
-    const [lat, setLat] = useState(42.35);
-    const [zoom, setZomm] = useState(9)
+    const [lng, setLgn] = useState(-38.5525926);
+    const [lat, setLat] = useState(-6.897518);
+    const [zoom, setZomm] = useState(13)
 
     useEffect(() => {
         if(map.current) return; //initialize map only once
