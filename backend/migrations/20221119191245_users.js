@@ -8,6 +8,9 @@ exports.up = function(knex, Promise) {
         table.string('name').notNull()
         table.string('email').notNull()
         table.string('password').notNull()
+        table.string('created_at').notNull(),
+        table.string('updated_at').nullable(),
+        table.string('deleted_at').nullable()
     })
 };
 

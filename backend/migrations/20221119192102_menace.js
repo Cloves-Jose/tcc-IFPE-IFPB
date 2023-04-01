@@ -7,7 +7,10 @@ exports.up = function(knex, Promise) {
         table.increments('id'),
         table.string('name').notNull(),
         table.string('photo').notNull(),
-        table.string('description').notNull()
+        table.string('description').notNull(),
+        table.string('created_at').notNull()
+        table.string('updated_at').nullable(),
+        table.string('deleted_at').nullable()
     })
 };
 

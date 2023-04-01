@@ -30,7 +30,8 @@ module.exports = app => {
                 .insert({
                     name: req.body.name,
                     email: req.body.email.toLowerCase(),
-                    password
+                    password: password,
+                    created_at: req.body.created_at
                 })
                 .then(_ => res.status(201).send())
                 .catch(err => res.status(400).json(err))

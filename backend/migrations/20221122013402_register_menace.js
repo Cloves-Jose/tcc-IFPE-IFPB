@@ -4,7 +4,7 @@
  */
 exports.up = function(knex) {
     return knex.schema.createTable('register_menace', table => {
-        table.increments('id'),
+        table.increments('id')
         table.string('age').notNull(),
         table.string('sex').notNull(),
         table.boolean('reside_menace').notNull(),
@@ -12,6 +12,9 @@ exports.up = function(knex) {
         table.string('image').nullable(),
         table.string('latitude').notNull(),
         table.string('longitude').notNull(),
+        table.string('created_at').notNull(),
+        table.string('updated_at').nullable(),
+        table.string('deleted_at').nullable(),
         table.integer('menace_id').unsigned().references('menace.id')
     })
 };
