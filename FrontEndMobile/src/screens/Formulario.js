@@ -21,6 +21,8 @@ import { server, showError, showSuccess } from '../common'
 
 export default props => {
 
+    const date = new Date()
+
     /**
      * Formulário
      */
@@ -31,9 +33,8 @@ export default props => {
     const [sex, setSex] = useState('')
     const [description, setDescription] = useState(null)
     const [modalVisible, setModalVisible] = useState(false)
-
-    const [sexError , setSexError] = useState('')
     const [ageError, setAgeError] = useState('')
+    const [created_at] = useState(date.toISOString())
 
     /**
      * Dropdown
@@ -66,6 +67,7 @@ export default props => {
                 image: "image",
                 latitude: latitude,
                 longitude: longitude,
+                created_at: created_at,
                 menace_id: props.route.params.id
             })
             showSuccess(`Ameaça cadastrada com sucesso!`)
