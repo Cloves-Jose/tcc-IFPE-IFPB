@@ -1,7 +1,5 @@
 module.exports = app => {
 
-    const date = new Date()
-
     /**
      * Lista todas as ameaças registradas
      * 
@@ -14,6 +12,11 @@ module.exports = app => {
                 id: 'id',
                 name: 'name',
                 photo: 'photo',
+                zone: 'zone',
+                dangerousness: 'dangerousness',
+                street: 'street',
+                neighborhood: 'neighborhood',
+                risk: 'risk',
                 description: 'description',
                 created_at: 'created_at',
                 update_at: 'updated_at',
@@ -26,11 +29,15 @@ module.exports = app => {
                 return res.status(400).json(err)
             })
     }
-
+    /**
+     * Deletar ameaça
+     * @param {*} req 
+     * @param {*} res 
+     */
     const deleteMenace = (req, res) => {
         app.db('menace')
             .where({ id: req.params.id })
-            .update({ deleted_at: date.toISOString() })
+            .update({ deleted_at: req.params.deleted_at })
             .then(() => res.status(204).send())
             .catch(err => res.status(500).json(err))
     }
@@ -55,6 +62,11 @@ module.exports = app => {
             .insert({
                 name: req.body.name,
                 photo: req.body.photo,
+                zone: req.body.zone,
+                dangerousness: req.body.dangerousness,
+                street: req.body.street,
+                neighborhood: req.body.neighborhood,
+                risk: req.body.risk,
                 description: req.body.description,
                 created_at: req.body.created_at,
             })

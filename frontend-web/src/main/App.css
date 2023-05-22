@@ -1,0 +1,32 @@
+/* Variáveis base */
+:root {
+    --color-blue: #3d72de;
+    --color-grey: #f3f5f8;
+    --color-page: #E5E4E2;
+    --color-grey-header: #E5E4E2;
+    --shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    --aside-width: 225px
+}
+
+/* Criação do layout grid */
+.app {
+    margin: 0;
+    display: grid;
+
+    /* Duas colunas, sendo uma o aside e a outra o resta da tela */
+    grid-template-columns: var(--aside-width) 1fr;
+
+    /* Definir o que ficará em cada área */
+    grid-template-areas: 
+        "menu content";
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+
+aside.menu-area {
+    grid-area: menu;
+}
+
+.main.content {
+    grid-area: content;
+}

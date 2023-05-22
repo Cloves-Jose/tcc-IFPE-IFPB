@@ -7,6 +7,11 @@ exports.up = function(knex, Promise) {
         table.increments('id'),
         table.string('name').notNull(),
         table.string('photo').notNull(),
+        table.string('zone').nullable(),
+        table.string('dangerousness').nullable(),
+        table.string('street').notNull(),
+        table.string('neighborhood').notNull(),
+        table.string('risk').nullable(),
         table.string('description').notNull(),
         table.string('created_at').notNull()
         table.string('updated_at').nullable(),

@@ -1,0 +1,16 @@
+.menu-item {
+    display: flex;
+    align-items: center;
+
+    margin: 5px;
+    padding: 10px;
+
+    text-decoration: none;
+
+    color: var(--color-blue);
+
+}
+
+.menu-item:hover {
+    background-color: #ADD8E6;
+}

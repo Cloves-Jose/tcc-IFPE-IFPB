@@ -5,18 +5,31 @@ module.exports = app => {
      * @param {*} req 
      * @param {*} res 
      */
-    const getGeolocation = (req, res) => {
-        app.db('register_menace')
+    const getGeolocation = async (req, res) => {
+        await app.db('register_menace')
             .select({
                 latitude: 'latitude',
                 longitude: 'longitude',
                 created_at: 'created_at',
                 updated_at: 'updated_at',
                 deleted_at: 'deleted_at',
-                menace_id: 'menace_id'
+                menace_id: 'menace_id',
+                description: 'description'
             })
             .then((geolocation) => {
-                return res.status(200).json(geolocation)
+                res.status(200).json(geolocation.map((item) => {
+                    return {
+                        type: "Feature",
+                        properties: {
+                            title: item.menace_id,
+                            description: item.description
+                        },
+                        geometry: {
+                            coordinates: [item.longitude, item.latitude],
+                            type: "Point"
+                        }
+                    }
+                }))
             })
             .catch((err) => {
                 return res.status(400).json(err)
