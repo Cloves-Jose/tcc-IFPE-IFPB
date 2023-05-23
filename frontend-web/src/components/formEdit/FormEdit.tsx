@@ -188,7 +188,7 @@ const FormEdit = (props: any) => {
                             </Row>
                             <Col style={{ marginLeft: "12px", display: "flex", justifyContent: "space-between" }}>
                                 <Button style={{ width: "100px", fontFamily: "Montserrat", fontSize: "0.8em" }} type="submit" form="fooId">Salvar</Button>
-                                <Button style={{ width: "100px", fontFamily: "Montserrat", backgroundColor:"#D3D3D3", fontSize: "0.8em", border: "none" }} type="submit" form="fooId">Cancelar</Button>
+                                <Button style={{ width: "100px", fontFamily: "Montserrat", backgroundColor:"#D3D3D3", fontSize: "0.8em", border: "none" }} variant='light' form="fooId">Cancelar</Button>
                             </Col>
                         </Form>
                     )} 
