@@ -17,18 +17,15 @@ const FormEdit = (props: any) => {
     const date = new Date
 
     const [validated, setValidated] = useState(false)
-    const [title, setTitle] = useState("")
-    const [description, setDescription] = useState("")
     const [actualDate] = useState(date.toISOString())
-    const [zone, setZone] = useState("")
-    const [file, setFile] = useState<any>([])
     const [dangerousness, setDangerousness] = useState("")
-    const [street, setStreet] = useState("")
-    const [neighborhood, setNeighborhood] = useState("")
-    const [menace, setMenace] = useState("")
     const [risk, setRisk] = useState("")
 
     const [riskValidator, setRiskValidator] = useState("")
+
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("")
+
     // const handleSubmit = (event:any) => {
     //     const form = event.currentTarget;
     //     if (form.checkValidity() === false) {
@@ -71,37 +68,27 @@ const FormEdit = (props: any) => {
 
                         }}
                         validate={values => {
-                            let errors = {};
+                            setName(values.name)
+                            setDescription(values.description)
                         }}
-                        onSubmit={() => console.log("Foi")}
+                        onSubmit={(values) => console.log(values)}
                     >
                     {({
                         values,
-                        errors,
-                        touched,
                         handleChange,
                         handleBlur,
                         handleSubmit,
-                        isSubmitting,
                     }) => (
                         <Form id="fooId" className="row needs-validation" style={{ justifyContent: "center", padding: "15px" }} noValidate validated={validated} onSubmit={handleSubmit}>
                             <Row className="mb-3">
                                 <Form.Group controlId="validationTitle">
                                     <Form.Label style={{ fontSize: "0.8em", fontFamily: "Montserrat" }}>Título</Form.Label>
                                         <FormControl
-                                            disabled={false}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
+                                            onChange={handleChange('name')}
+                                            onBlur={handleBlur('name')}
                                             value={values.name}
                                         >
                                         </FormControl>
-                                        {/* <Form.Control
-                                            required
-                                            type="text"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            value={values.name}
-                                        /> */}
                                     <Form.Control.Feedback>Preenchido corretamente!</Form.Control.Feedback>
                                     <Form.Control.Feedback type="invalid">Por favor preencha corretamente o campo</Form.Control.Feedback>
                                     <div className="form-text" >Este será o título exibido no aplicativo mobile</div>
@@ -184,22 +171,24 @@ const FormEdit = (props: any) => {
                             <Row className="mb-3">
                                 <Form.Group controlId="validationDescription">
                                     <Form.Label style={{ fontSize: "0.8em", fontFamily: "Montserrat" }}>Descrição</Form.Label>
-                                    <Form.Control
+                                    <FormControl
                                         required
                                         as="textarea"
                                         style={{ maxHeight: "100px", minHeight: "100px", height: "100px" }}
                                         maxLength={200}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
+                                        onChange={handleChange('description')}
+                                        onBlur={handleBlur('description')}
                                         value={values.description}
-                                    />
+                                    ></FormControl>
+
                                     <Form.Control.Feedback>Preenchido corretamente!</Form.Control.Feedback>
                                     <Form.Control.Feedback type="invalid">Por favor preencha corretamente o campo</Form.Control.Feedback>
                                     <div className="form-text" >Esta será a descrição exibida no aplicativo mobile</div>
                                 </Form.Group>
                             </Row>
-                            <Col style={{ marginLeft: "12px" }}>
+                            <Col style={{ marginLeft: "12px", display: "flex", justifyContent: "space-between" }}>
                                 <Button style={{ width: "100px", fontFamily: "Montserrat", fontSize: "0.8em" }} type="submit" form="fooId">Salvar</Button>
+                                <Button style={{ width: "100px", fontFamily: "Montserrat", backgroundColor:"#D3D3D3", fontSize: "0.8em", border: "none" }} type="submit" form="fooId">Cancelar</Button>
                             </Col>
                         </Form>
                     )} 
