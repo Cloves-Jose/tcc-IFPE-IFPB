@@ -1,5 +1,7 @@
 module.exports = app => {
 
+    const date = new Date()
+
     /**
      * Lista todas as ameaças registradas
      * 
@@ -10,12 +12,10 @@ module.exports = app => {
         app.db('menace')
             .select({
                 id: 'id',
-                name: 'name',
+                title: 'title',
                 photo: 'photo',
-                zone: 'zone',
                 dangerousness: 'dangerousness',
-                street: 'street',
-                neighborhood: 'neighborhood',
+                category: 'category',
                 risk: 'risk',
                 description: 'description',
                 created_at: 'created_at',
@@ -31,15 +31,37 @@ module.exports = app => {
     }
     /**
      * Deletar ameaça
+     * 
      * @param {*} req 
      * @param {*} res 
      */
     const deleteMenace = (req, res) => {
         app.db('menace')
             .where({ id: req.params.id })
-            .update({ deleted_at: req.params.deleted_at })
+            .update({ deleted_at: date.toISOString() })
             .then(() => res.status(204).send())
             .catch(err => res.status(500).json(err))
+    }
+    /**
+     * Atualizar ameaça
+     * @param {*} req 
+     * @param {*} res 
+     */
+    const updateMenace = (req, res) => {
+        const menace = { ...req.body}
+        console.log(menace)
+        if(menace.id) {
+            app.db('menace')
+                .update({
+                    name: req.body.name,
+                    description: req.body.description,
+                    risk: req.body.risk
+                })
+                .where({ id: menace.id })
+                .whereNull('deletedAt')
+                .then(_ => res.status(204).send())
+                .catch(err => res.status(500).send(err))
+        }
     }
 
     /**
@@ -49,23 +71,21 @@ module.exports = app => {
      * @returns 
      */
     const save = (req, res) => {
-        
-        if(!req.body.name.trim()) {
-            return res.status(400).send('Título é um campo obrigatório')
-        }
+        console.log(req.body)
+        // if(!req?.body?.name?.trim()) {
+        //     return res.status(400).send('Título é um campo obrigatório')
+        // }
 
-        if(!req.body.description.trim()) {
-            return res.status(400).send('Descrição é um campo obrigatório')
-        }
+        // if(!req?.body?.description?.trim()) {
+        //     return res.status(400).send('Descrição é um campo obrigatório')
+        // }
 
         app.db('menace')
             .insert({
-                name: req.body.name,
+                title: req.body.title,
                 photo: req.body.photo,
-                zone: req.body.zone,
                 dangerousness: req.body.dangerousness,
-                street: req.body.street,
-                neighborhood: req.body.neighborhood,
+                category: req.body.category,
                 risk: req.body.risk,
                 description: req.body.description,
                 created_at: req.body.created_at,
@@ -74,5 +94,5 @@ module.exports = app => {
             .catch(err => res.status(400).json(err))
     }
 
-    return { save, getMenace, deleteMenace }
+    return { save, getMenace, deleteMenace, updateMenace }
 }
