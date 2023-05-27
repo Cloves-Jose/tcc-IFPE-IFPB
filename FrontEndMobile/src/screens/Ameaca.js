@@ -46,7 +46,7 @@ export default props => {
                     >
                     <Avatar source={{uri: item.photo}}/>
                     <ListItem.Content>
-                        <ListItem.Title style={styles.listTitle}>{item.name}</ListItem.Title>
+                        <ListItem.Title style={styles.listTitle}>{item.title}</ListItem.Title>
                         <ListItem.Subtitle style={styles.listSubtitle}>{item.description}</ListItem.Subtitle>
                     </ListItem.Content>
                     <ListItem.Chevron/>
