@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Formik } from "formik"
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
@@ -22,36 +22,19 @@ const FormEdit = (props: any) => {
     const [risk, setRisk] = useState("")
 
     const [riskValidator, setRiskValidator] = useState("")
+    const [customerName, setCustomerName] = useState();
+    const [customerDescription, setCustomerDescription] = useState()
+    const [customerRisk, setCustomerRisk] = useState()
 
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("")
-
-    // const handleSubmit = (event:any) => {
-    //     const form = event.currentTarget;
-    //     if (form.checkValidity() === false) {
-    //         event.preventDefault();
-    //         event.stopPropagation();
-    //     }
-
-    //     setValidated(true)
-    //     postForm()
-    //     event.preventDefault()
-    // }
-
-
-    // const postForm = async () => {
-    //     await axios.post(`${server}/register`, {
-    //         name: title,
-    //         photo: "https://img.freepik.com/fotos-gratis/tiro-de-angulo-alto-de-duas-escavadeiras-em-um-canteiro-de-obras_181624-7771.jpg?w=1380&t=st=1675361902~exp=1675362502~hmac=22859b6ce31bdbc02a28630f129f0eb20a7ed927e7754fd1a6b19b299c878e53",
-    //         zone: zone,
-    //         dangerousness: dangerousness,
-    //         street: street,
-    //         neighborhood: neighborhood,
-    //         risk: risk,
-    //         description: description,
-    //         created_at: actualDate
-    //     })
-    // }
+    const updateMenace = async (menaceId: any, jsonSend: any) => {
+        await axios.put(`${server}/update/${menaceId}`, jsonSend)
+        .then((res) => {
+            console.log(res)
+        })
+        .catch((e) => {
+            console.error(e)
+        })
+    }
 
     return (
         <Modal show={props.show} onHide={props.onHide} size="lg">
@@ -62,16 +45,27 @@ const FormEdit = (props: any) => {
                 <Container>
                     <Formik
                         initialValues={{
-                            name: props?.data?.name,
-                            description: props?.data?.description,
-                            risk: props?.data?.risk
+                            id: props?.data?.id,
+                            name: customerName,
+                            description: customerDescription,
+                            risk: customerRisk
 
                         }}
-                        validate={values => {
-                            setName(values.name)
-                            setDescription(values.description)
+                        validate={(values) => {
+                            setCustomerName(values.name)
+                            setCustomerDescription(values.description)
+                            setCustomerRisk(values.risk)
                         }}
-                        onSubmit={(values) => console.log(values)}
+                        onSubmit={async (values) => {
+                            let JsonSend = {
+                                id: props?.data?.id,
+                                name: props?.data?.name,
+                                description: props?.data?.description,
+                                risk: props?.data?.risk
+                            }
+
+                            updateMenace(values.id, JsonSend)
+                        }}
                     >
                     {({
                         values,

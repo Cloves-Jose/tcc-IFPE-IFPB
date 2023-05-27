@@ -17,8 +17,8 @@ const DeleteModal = (props: any) => {
             <Row>
                 <Col>
                     <Row style={{ justifyContent: "space-between", marginLeft: "15px", marginRight: "15px", paddingBottom: "15px"}}>
-                        <Button style={{ width: "100px", backgroundColor:"#D3D3D3", fontFamily: "Montserrat", fontSize: "0.8em" }} variant='light'>{props.cancelButton}</Button>
-                        <Button style={{ width: "100px", fontFamily: "Montserrat", fontSize: "0.8em" }} variant='primary'>{props.confirmationButton}</Button>
+                        <Button style={{ width: "100px", backgroundColor:"#D3D3D3", fontFamily: "Montserrat", fontSize: "0.8em" }} variant='light' onClick={props.onClickCancel}>{props.cancelButton}</Button>
+                        <Button style={{ width: "100px", fontFamily: "Montserrat", fontSize: "0.8em" }} variant='primary' onClick={props.onClickConfirmation}>{props.confirmationButton}</Button>
                     </Row>
                 </Col>
             </Row>
