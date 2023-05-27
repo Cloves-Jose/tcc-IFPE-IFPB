@@ -11,7 +11,7 @@ import { faEllipsisV  } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FormEdit from '../formEdit/FormEdit';
 import DeleteModal from '../deleteModal/deleteModal';
-import "./Grid.css"
+import "./ListMenace.css"
 import axios from 'axios';
 
 

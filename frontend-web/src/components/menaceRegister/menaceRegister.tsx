@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import Header from "../templates/Header"
-import ListMenace from "../grid/listMenace"
+import ListMenace from "../listMenaces/listMenace"
+import ListCategory from "../listCategory/listCategory"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Container from "react-bootstrap/Container"
@@ -46,7 +47,7 @@ const MenaceRegister = () => {
         console.error(e)
         })
     }
-    
+
     useEffect(() => {
     setCurrentParams((params) => {
         setCurrentState((state) => {
@@ -126,7 +127,7 @@ const MenaceRegister = () => {
                                     <Row className="mt-4">
                                         <Col>
                                             <div style={{ marginLeft: "15px" }}>
-                                                {/* <ListMenace currentMenace={aux} updateListAfterDelete={updateListAfterDelete}/> */}
+                                                {/* <ListCategory currentCategory={}/> */}
                                             </div>
                                         </Col>
                                     </Row>
@@ -135,29 +136,6 @@ const MenaceRegister = () => {
                         </Tabs>
                     </Row>
                 </div>
-                {/* <Container fluid>
-                    <Row className="mb-3">
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <div style={{ display: "flex", alignItems: "center", marginLeft: "15px" }}>
-                                <h5 style={{ fontWeight: "400", color: "var(--color-blue)", fontFamily: "Montserrat" }}>
-                                    Cadastrar ameaça
-                                </h5>
-                            </div>
-                            <div style={{ marginLeft: "15px" }}>
-                                <Button variant="light" onClick={handleShow} style={{ width: "50px", height: "50px" }}>
-                                    <FontAwesomeIcon icon={faPlus} style={{ color: "var(--color-blue)" }} size="xl"/>
-                                </Button>
-                            </div>
-                        </div>
-                    </Row>
-                    <Row className="mb-3">
-                        <Col>
-                            <div style={{ marginLeft: "15px" }}>
-                                <ListMenace currentMenace={aux} updateListAfterDelete={updateListAfterDelete}/>
-                            </div>
-                        </Col>
-                    </Row>
-                </Container> */}
             </div>
         </>
 
