@@ -14,6 +14,8 @@ const server = process.env.REACT_APP_LOCAL
 
 const FormEdit = (props: any) => {
 
+    let JsonSend = {}
+
     const date = new Date
 
     const [validated, setValidated] = useState(false)
@@ -22,9 +24,15 @@ const FormEdit = (props: any) => {
     const [risk, setRisk] = useState("")
 
     const [riskValidator, setRiskValidator] = useState("")
-    const [customerName, setCustomerName] = useState();
+    const [customerTitle, setCustomerTitle] = useState();
     const [customerDescription, setCustomerDescription] = useState()
     const [customerRisk, setCustomerRisk] = useState()
+
+    const [id, setCurrentId] = useState("")
+    const [title, setCurrentTitle] = useState("")
+    const [description, setCurrentDescription] = useState("")
+    const [feedbackTitle, setFeedbackTitle] = useState(false)
+    const [feedbackDescription, setFeedbackDescription] = useState(false)
 
     const updateMenace = async (menaceId: any, jsonSend: any) => {
         await axios.put(`${server}/update/${menaceId}`, jsonSend)
@@ -44,53 +52,80 @@ const FormEdit = (props: any) => {
             <Modal.Body>
                 <Container>
                     <Formik
-                        initialValues={{
-                            id: props?.data?.id,
-                            name: customerName,
-                            description: customerDescription,
-                            risk: customerRisk
-
-                        }}
+                        initialValues={{ id: props?.data?.id, title: props?.data?.title, description: props?.data?.description }}
                         validate={(values) => {
-                            setCustomerName(values.name)
-                            setCustomerDescription(values.description)
-                            setCustomerRisk(values.risk)
-                        }}
-                        onSubmit={async (values) => {
-                            let JsonSend = {
-                                id: props?.data?.id,
-                                name: props?.data?.name,
-                                description: props?.data?.description,
-                                risk: props?.data?.risk
+                            let errors: any = {}
+
+                            setCurrentId(values.id)
+                            setCurrentTitle(values.title)
+                            setCurrentDescription(values.description)
+
+                            if(!values?.title) {
+                                errors["title"] = 'Preencha este campo'
+                                setFeedbackTitle(true)
+                            } else {
+                                setFeedbackTitle(false)
                             }
 
-                            updateMenace(values.id, JsonSend)
+                            if(!values.description) {
+                                errors["description"] = 'Preencha este campo'
+                                setFeedbackDescription(true)
+                            } else {
+                                setFeedbackDescription(false)
+                            }
+
+                        }}
+                        onSubmit={async (values) => {
+                            JsonSend = {
+                                "id": id,
+                                "title": title,
+                                "description": description,
+                                "updated_at": date.toISOString()
+                            }
+                            console.log(JsonSend)
+                            await axios.put(`${server}/update/${values.id}`, JsonSend)
+                            .then((res) => {
+                                console.log(res)
+                            })
+                            .catch((e) => {
+                                console.error(e)
+                            })
                         }}
                     >
                     {({
                         values,
+                        errors,
+                        touched,
                         handleChange,
                         handleBlur,
                         handleSubmit,
+                        isSubmitting
                     }) => (
                         <Form id="fooId" className="row needs-validation" style={{ justifyContent: "center", padding: "15px" }} noValidate validated={validated} onSubmit={handleSubmit}>
                             <Row className="mb-3">
-                                <Form.Group controlId="validationTitle">
+                                <Form.Group>
                                     <Form.Label style={{ fontSize: "0.8em", fontFamily: "Montserrat" }}>Título</Form.Label>
                                         <FormControl
-                                            onChange={handleChange('name')}
-                                            onBlur={handleBlur('name')}
-                                            value={values.name}
+                                            isInvalid={feedbackTitle}
+                                            placeholder="Informe um título!"
+                                            aria-label="Informe um título!"
+                                            type="title"
+                                            id="title"
+                                            name="title"
+                                            autoComplete="title"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.title}
                                         >
                                         </FormControl>
                                     <Form.Control.Feedback>Preenchido corretamente!</Form.Control.Feedback>
-                                    <Form.Control.Feedback type="invalid">Por favor preencha corretamente o campo</Form.Control.Feedback>
+                                    <Form.Control.Feedback type="invalid">Preencha corretamente!</Form.Control.Feedback>
                                     <div className="form-text" >Este será o título exibido no aplicativo mobile</div>
                                 </Form.Group>
                             </Row>
                             <Row className="mb-3">
                                 <Col>
-                                    <Form.Group controlId="validationImage">
+                                    <Form.Group>
                                         <Form.Label style={{ fontSize: "0.8em", fontFamily: "Montserrat" }}>Image</Form.Label>
                                         <Form.Control
                                             required
@@ -130,7 +165,7 @@ const FormEdit = (props: any) => {
                                                     checked={risk === "1"}
                                                     onChange={() => { setRiskValidator("1") }}
                                                     onBlur={handleBlur}
-                                                    value={values.risk}
+                                                    // value={values.risk}
                                                     onClick={() => setRisk("1")}
                                                 />
                                             </Form.Group>
@@ -144,7 +179,7 @@ const FormEdit = (props: any) => {
                                                     checked={risk === "0"}
                                                     onChange={() => { setRiskValidator("0") }}
                                                     onBlur={handleBlur}
-                                                    value={values.risk}
+                                                    // value={values.risk}
                                                     onClick={() => setRisk("0")}
                                                 />
                                             </Form.Group>
@@ -163,15 +198,21 @@ const FormEdit = (props: any) => {
                                 </Col>
                             </Row>
                             <Row className="mb-3">
-                                <Form.Group controlId="validationDescription">
+                                <Form.Group>
                                     <Form.Label style={{ fontSize: "0.8em", fontFamily: "Montserrat" }}>Descrição</Form.Label>
                                     <FormControl
-                                        required
+                                        isInvalid={feedbackDescription}
+                                        placeholder="Informe uma descrição!"
+                                        arial-label="Informe uma descrição!"
+                                        type="description"
+                                        id="description"
+                                        name="description"
+                                        autoComplete="description"
                                         as="textarea"
                                         style={{ maxHeight: "100px", minHeight: "100px", height: "100px" }}
                                         maxLength={200}
-                                        onChange={handleChange('description')}
-                                        onBlur={handleBlur('description')}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
                                         value={values.description}
                                     ></FormControl>
 

@@ -7,7 +7,7 @@ import Col from "react-bootstrap/Col"
 import Container from "react-bootstrap/Container"
 import Button from "react-bootstrap/Button"
 import { Tabs, Tab } from "react-bootstrap"
-import FormRegister from "../formRegister/FormRegister"
+import FormRegister from "../formRegisterMenace/formRegisterMenace"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import axios from 'axios';
@@ -19,7 +19,9 @@ const MenaceRegister = () => {
     const [showMenaceRegister, setShowMenaceRegister] = useState(false)
     const [showCategoryRegister, setShowCategoryRegister] = useState(false)
     const [aux, setAux] = useState([])
+    const [auxCategory, setAuxCategory] = useState([])
     const [currentMenace, setCurrentMenace] = useState([])
+    const [currentCategory, setCurrentCategory] = useState([])
     const [currentLimit, setCurrentLimit] = useState(50)
     const [currentPage, setCurrentPage] = useState(1)
     const [state, setCurrentState] = useState("")
@@ -30,33 +32,38 @@ const MenaceRegister = () => {
     const handleCloseCategoryRegister = () => setShowCategoryRegister(false)
     const handleShowCategoryRegister = () => setShowCategoryRegister(true)
 
-    const getAllMenacesToPagination = (params: { limit: number, page: number }) => {
+    const getAllToPagination = (params: { limit: number, page: number }) => {
         getAllMenaces(params)
-      }
+        getAllCategory(params)
+    }
     
     const getAllMenaces = async (params: { limit: number; page: number }) => {
     await axios.get(`${server}/getMenace`)
     .then((res) => {
-        setAux((state) => {
-        let aux = state.concat(res.data)
-        setAux(aux);
-        setCurrentMenace(aux)
-        return state
+            setAux((state) => {
+            let aux = state.concat(res.data)
+            setAux(aux);
+            setCurrentMenace(aux)
+            return state
         })
     }).catch((e) => {
-        console.error(e)
+        console.error(e) 
         })
     }
 
-    useEffect(() => {
-    setCurrentParams((params) => {
-        setCurrentState((state) => {
-        getAllMenacesToPagination(Object.assign(params, { limit: currentLimit, page: currentPage }))
-        return state
+    const getAllCategory = async (params: { limit: number; page: number }) => {
+    await axios.get(`${server}/getCategory`)
+    .then((res) => {
+        setAuxCategory((state) => {
+            let aux = state.concat(res.data)
+            setAuxCategory(aux)
+            setCurrentCategory(aux)
+            return state
         })
-        return params
-    })
-    }, [currentPage, currentLimit])
+    }).catch(e => {
+        console.error(e)
+        })
+    }
 
     const updateListAfterDelete = () => {
         setAux([])
@@ -68,6 +75,20 @@ const MenaceRegister = () => {
             setCurrentState("")
         }
     }
+
+    const updateListFunction = () => {
+        setCurrentPage(currentPage + 1)
+    }
+
+    useEffect(() => {
+    setCurrentParams((params) => {
+        setCurrentState((state) => {
+        getAllToPagination(Object.assign(params, { limit: currentLimit, page: currentPage }))
+        return state
+        })
+        return params
+    })
+    }, [currentPage, currentLimit])
 
     return (
         <>
@@ -89,7 +110,7 @@ const MenaceRegister = () => {
                                         <div style={{ display: "flex", alignItems: "center" }}>
                                             <div style={{ display: "flex", alignItems: "center", marginLeft: "15px" }}>
                                                 <h5 style={{ fontWeight: "400", color: "var(--color-blue)", fontFamily: "Montserrat" }}>
-                                                    Cadastrar ameaça
+                                                    Ameaça
                                                 </h5>
                                             </div>
                                             <div style={{ marginLeft: "15px" }}>
@@ -102,7 +123,7 @@ const MenaceRegister = () => {
                                     <Row className="mt-3">
                                         <Col>
                                             <div style={{ marginLeft: "15px" }}>
-                                                <ListMenace currentMenace={aux} updateListAfterDelete={updateListAfterDelete}/>
+                                                <ListMenace currentMenace={aux} updateListAfterDelete={updateListAfterDelete} updateListfunction={updateListFunction}/>
                                             </div>
                                         </Col>
                                     </Row>
@@ -114,7 +135,7 @@ const MenaceRegister = () => {
                                         <div style={{ display: "flex", alignItems: "center" }}>
                                             <div style={{ display: "flex", alignItems: "center", marginLeft: "15px" }}>
                                                 <h5 style={{ fontWeight: "400", color: "var(--color-blue)", fontFamily: "Montserrat" }}>
-                                                    Cadastrar categoria
+                                                    Categoria
                                                 </h5>
                                             </div>
                                             <div style={{ marginLeft: "15px" }}>
@@ -127,7 +148,7 @@ const MenaceRegister = () => {
                                     <Row className="mt-4">
                                         <Col>
                                             <div style={{ marginLeft: "15px" }}>
-                                                {/* <ListCategory currentCategory={}/> */}
+                                                <ListCategory currentCategory={auxCategory}/>
                                             </div>
                                         </Col>
                                     </Row>

@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useRef, useCallback } from 'react'
+import { useMemo, useState, useEffect, useRef, useCallback, FC } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Container from 'react-bootstrap/esm/Container';
 import Row from 'react-bootstrap/esm/Row';
@@ -9,7 +9,7 @@ import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { faEllipsisV  } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import FormEdit from '../formEdit/FormEdit';
+import FormEdit from '../formEditMenace/formEditMenace';
 import DeleteModal from '../deleteModal/deleteModal';
 import "./ListMenace.css"
 import axios from 'axios';
@@ -17,17 +17,15 @@ import axios from 'axios';
 
 const server = process.env.REACT_APP_LOCAL;
 
-export type Menace = {
+interface Menace {
   id: string,
   title: string,
-  created_at: string,
-  updated_at: string,
-  deleted_at: string,
   description: string,
   category: string,
   dangerousness: string,
-  neighborhood: string,
-  street: string
+  created_at: string,
+  updated_at: string,
+  deleted_at: string,
 }
 
 const ListMenace = (props: any) => {
@@ -46,13 +44,15 @@ const ListMenace = (props: any) => {
 
   }
 
+  // console.log(props)
+
   // Deletar ameaça
   const deleteMenace = async (menaceId: any) => {
     await axios.delete(`${server}/deleteMenace/${menaceId}`, {
     })
     .then((res) => {
       handleCloseDeleteModal()
-      props.updateListAfterDelete()
+      // props.updateListAfterDelete()
     })
     .catch((e) => {
       console.error(e)
@@ -91,10 +91,10 @@ const ListMenace = (props: any) => {
     </div>
       <InfiniteScroll
         dataLength={props.currentMenace.length}
-        next={fetchData}
+        next={props.updateListFunction}
         hasMore={true}
         loader={<h4></h4>}
-        height={400}
+        height={300}
         className='scroolBar'
         style={{backgroundColor: "#FFF", overflowX:"hidden", overflowY: "auto"}}
       >
