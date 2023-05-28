@@ -48,17 +48,13 @@ module.exports = app => {
      * @param {*} res 
      */
     const updateMenace = (req, res) => {
-        const menace = { ...req.body}
+        const menace = { ...req.body }
         console.log(menace)
         if(menace.id) {
             app.db('menace')
-                .update({
-                    name: req.body.name,
-                    description: req.body.description,
-                    risk: req.body.risk
-                })
+                .update(menace)
                 .where({ id: menace.id })
-                .whereNull('deletedAt')
+                .whereNull('deleted_at')
                 .then(_ => res.status(204).send())
                 .catch(err => res.status(500).send(err))
         }
