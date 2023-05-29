@@ -27,8 +27,15 @@ interface Menace {
   updated_at: string,
   deleted_at: string,
 }
+interface ListMenaceInterface {
+  currentMenace: Menace[],
+  
+  updateListFunction: () => void,
+  updateListAfterDelete: () => void,
+}
 
-const ListMenace = (props: any) => {
+
+const ListMenace: FC<ListMenaceInterface> = (props) => {
 
   const [show, setShow] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
@@ -52,7 +59,7 @@ const ListMenace = (props: any) => {
     })
     .then((res) => {
       handleCloseDeleteModal()
-      // props.updateListAfterDelete()
+      props.updateListAfterDelete()
     })
     .catch((e) => {
       console.error(e)
@@ -132,8 +139,7 @@ const ListMenace = (props: any) => {
                 )
               }
             })
-
-            }
+          }
           </ListGroup>
         }
       </InfiniteScroll>

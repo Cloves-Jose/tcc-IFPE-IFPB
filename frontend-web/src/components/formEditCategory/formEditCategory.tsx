@@ -6,7 +6,7 @@ import axios from "axios"
 
 const server = process.env.REACT_APP_LOCAL
 
-const FormRegisterCategory = (props: any) => {
+const FormEditCategory = (props: any) => {
 
     const date = new Date
 
@@ -16,29 +16,7 @@ const FormRegisterCategory = (props: any) => {
     const [category, setCategory] = useState("")
     const [actualDate] = useState(date.toISOString())
     const [showFeedbackTitle, setShowFeedbackTitle] = useState(false)
-    
-    // const handleSubit = (event: any) => {
-    //     const form = event.currentTarget;
-    //     if (form.checkValidity() === false) {
-    //         event.preventDefault();
-    //         event.stopPtopagation();
-    //     }
-
-    //     setValidated(true)
-    //     postForm()
-    //     event.preventDefault()
-    // }
-
-    // const postForm = async () => {
-    //     await axios.post(`${server}/registerCategory`, {
-    //         title: category,
-    //         created_at: actualDate
-    //     }).then((res) => {
-    //         console.log(res)
-    //     }).catch((e) => {
-    //         console.error(e)
-    //     })
-    // }
+    const [currentId, setCurrentId] = useState("")
     
     return (
         <Modal show={props.show} onHide={props.onHide} size="lg" centered>
@@ -48,9 +26,10 @@ const FormRegisterCategory = (props: any) => {
             <Modal.Body>
                 <Container>
                     <Formik
-                        initialValues={{ title: '' }}
+                        initialValues={{ id: props?.data?.id, title: props?.data?.title }}
                         validate={values => {
                             let errors:any = {}
+                            setCurrentId(values.id)
                             setCategory(values.title)
 
                             if(!values.title) {
@@ -62,13 +41,14 @@ const FormRegisterCategory = (props: any) => {
 
                             return errors
                         }}
-                        onSubmit={async () => {
+                        onSubmit={async (values) => {
                             JsonSend_sector = {
+                                "id": currentId,
                                 "title": category,
-                                "created_at": actualDate
+                                "updated_at": date.toISOString()
                             }
 
-                            await axios.post(`${server}/registerCategory`, JsonSend_sector)
+                            await axios.put(`${server}/updateCategory/${values.id}`, JsonSend_sector)
                                 .then((res) => {
                                     console.log(res)
                                     props.onHide()
@@ -94,7 +74,6 @@ const FormRegisterCategory = (props: any) => {
                                             isInvalid={showFeedbackTitle}
                                             placeholder="Informe um título para a categoria"
                                             aria-label="Informe um título para a categoria"
-                                            // required
                                             type="text"
                                             id="title"
                                             name="title"
@@ -102,10 +81,9 @@ const FormRegisterCategory = (props: any) => {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.title}
-                                            // onChange={category => setCategory(category.target.value)}
                                         />
                                         <Form.Control.Feedback>Preenchido corretamente!</Form.Control.Feedback>
-                                        <Form.Control.Feedback type="invalid">{errors.title}</Form.Control.Feedback>
+                                        <Form.Control.Feedback type="invalid">Preencha corretamente!</Form.Control.Feedback>
                                     </Form.Group>
                                 </Row>
                                 <Row className="mb-1" style={{ marginLeft: "12px" }}>
@@ -120,4 +98,4 @@ const FormRegisterCategory = (props: any) => {
     )
 }
 
-export default FormRegisterCategory
+export default FormEditCategory

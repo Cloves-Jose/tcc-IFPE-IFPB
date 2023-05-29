@@ -77,7 +77,15 @@ const MenaceRegister = () => {
     }
 
     const updateListFunction = () => {
-        setCurrentPage(currentPage + 1)
+        // setCurrentPage(currentPage + 1)
+        setAux((prevState) => {
+            if (prevState.length > (49 * currentPage)) {
+                setCurrentPage(currentPage + 1)
+                return prevState
+            } else {
+                return prevState
+            }
+        })
     }
 
     useEffect(() => {
@@ -123,7 +131,7 @@ const MenaceRegister = () => {
                                     <Row className="mt-3">
                                         <Col>
                                             <div style={{ marginLeft: "15px" }}>
-                                                <ListMenace currentMenace={aux} updateListAfterDelete={updateListAfterDelete} updateListfunction={updateListFunction}/>
+                                                <ListMenace currentMenace={aux} updateListAfterDelete={updateListAfterDelete} updateListFunction={updateListFunction}/>
                                             </div>
                                         </Col>
                                     </Row>
@@ -148,7 +156,7 @@ const MenaceRegister = () => {
                                     <Row className="mt-4">
                                         <Col>
                                             <div style={{ marginLeft: "15px" }}>
-                                                <ListCategory currentCategory={auxCategory}/>
+                                                <ListCategory currentCategory={auxCategory} updateListAfterDelete={updateListAfterDelete}/>
                                             </div>
                                         </Col>
                                     </Row>

@@ -1,8 +1,14 @@
+import { useState } from 'react'
 import { ListGroup, Col, Row, Popover, OverlayTrigger, Button } from "react-bootstrap"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV  } from "@fortawesome/free-solid-svg-icons";
 import InfiniteScroll from "react-infinite-scroll-component"
+import DeleteModal from '../deleteModal/deleteModal';
+import FormEditCategory from '../formEditCategory/formEditCategory';
 import "./ListCategory.css"
+import axios from 'axios'
+
+const server = process.env.REACT_APP_LOCAL
 
 export type Category = {
     id: string,
@@ -18,27 +24,50 @@ const ListCategory = (props: any) => {
 
     }
 
+    const [showEditModal, setShowEditModal] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [categoryInfo, setCategoryInfo] = useState<Category>()
+
+    const handleCloseEditModal = () => setShowEditModal(false)
+    const handleShowEditModal = () => setShowEditModal(true)
+
+    const handleCloseDeleteModal = () => setShowDeleteModal(false)
+    const handleShowDeleteModal = () => setShowDeleteModal(true)
+
     const formatDate = (date: any) => {
         const result = new Date(date).toLocaleDateString('pt-BR')
 
         return result
     }
 
+    const deleteCategory = async (menaceId: any) => {
+        await axios.delete(`${server}/deleteCategory/${menaceId}`, {
+        })
+        .then((res) => {
+            handleCloseDeleteModal()
+            props.updateListAfterDelete()
+        })
+        .catch((e) => {
+            console.error(e)
+        })
+    }
+
     const popover = () => {
         return (
             <Popover style={{ zIndex: '500', backgroundColor: "var(--color-grey)", border: 'none', color: '#40484E', fontFamily: 'Montserrat', fontSize: '0.8em' }}>
                 <Popover.Body style={{ padding: "0px" }}>
-                    <Button className="m-2" style={{ backgroundColor: 'transparent', border: 'none', color: 'black', fontSize: 'inherit' }}>Editar informações</Button>
+                    <Button className="m-2" style={{ backgroundColor: 'transparent', border: 'none', color: 'black', fontSize: 'inherit' }} onClick={handleShowEditModal}>Editar informações</Button>
                         <hr style={{ margin: "0px" }} />
-                    <Button className="m-2" style={{ backgroundColor: 'transparent', border: 'none', color: 'black', fontSize: 'inherit' }}>Deletar categoria</Button>
+                    <Button className="m-2" style={{ backgroundColor: 'transparent', border: 'none', color: 'black', fontSize: 'inherit' }} onClick={handleShowDeleteModal}>Deletar categoria</Button>
                 </Popover.Body>
             </Popover>
         )
     }
 
     return (
-        <>
-            {/* {console.log(props.currentCategory)} */}
+        <>  
+            <FormEditCategory show={showEditModal} onHide={handleCloseEditModal} data={categoryInfo} title="Editar categoria"/>
+            <DeleteModal title="Deletar categoria" body={`Deseja deletar à categoria ${categoryInfo?.title}?`} show={showDeleteModal} onHide={handleCloseDeleteModal} confirmationButton="OK" cancelButton="Cancelar" onClickConfirmation={() => deleteCategory(categoryInfo?.id)} onClickCancel={handleCloseDeleteModal}/>
             <div>
                 <ListGroup variant="flush">
                     <ListGroup.Item>
@@ -90,8 +119,8 @@ const ListCategory = (props: any) => {
                                             }
                                             <Col className='gridRow'>
                                                 <OverlayTrigger rootClose={true} trigger={['click']} placement="left" overlay={popover()}>
-                                                    <Button id={"button*ID*" + item.id + "button*ID*" + item.title} variant='light' className='nopadding d-flex justify-content-start align-self-center' style={{ marginTop: '', border: 'none', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: "transparent" }}>
-                                                    <FontAwesomeIcon icon={faEllipsisV} style={{ color: "#848884" }}/>
+                                                    <Button id={"button*ID*" + item.id + "button*ID*" + item.title} variant='light' className='nopadding d-flex justify-content-start align-self-center' style={{ marginTop: '', border: 'none', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: "transparent" }} onClick={() => setCategoryInfo(item)}>
+                                                        <FontAwesomeIcon icon={faEllipsisV} style={{ color: "#848884" }}/>
                                                     </Button>
                                                 </OverlayTrigger>
                                             </Col>
