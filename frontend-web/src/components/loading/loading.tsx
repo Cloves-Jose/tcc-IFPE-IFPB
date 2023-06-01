@@ -13,7 +13,7 @@ const Loading = (props: any) => {
     })
     
     return (
-        <Row className="nopadding justify-content-center align-content-center gx-0" style={{ backgroundColor: 'transparent', height: props.height == null ? "100%" : props.height, width: props.width == null ? "100%" : props.width, position: 'fixed', zIndex: '10', display: visibility }}>
+        <Row className="nopadding justify-content-center align-content-center gx-0" style={{ display: visibility, justifyContent: "center", alignItems: "center", backgroundColor: 'transparent', height: props.height == null ? "100%" : props.height, width: props.width == null ? "100%" : props.width, zIndex: '10' }}>
             <Col md={1}>
                     <Row style={{margin: "auto", background: "none", display: "block", shapeRendering: "auto"}}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="200px" height="200px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">

@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Modal from 'react-bootstrap/Modal'
 import Container from 'react-bootstrap/Container'
+import { MultiSelect } from "react-multi-select-component"
 import { Formik } from "formik"
 import { actualDate } from "../../helpers/DateHour"
 
@@ -12,6 +13,11 @@ import axios from "axios"
 
 const server = process.env.REACT_APP_LOCAL
 
+// const options = [
+//     { label: "Grapes 🍇", value: "grapes" },
+//     { label: "Mango 🥭", value: "mango" },
+//     { label: "Strawberry 🍓", value: "strawberry" },
+//   ];
 const FormRegister = (props: any) => {
 
     const date = actualDate()
@@ -26,6 +32,10 @@ const FormRegister = (props: any) => {
     const [risk, setRisk] = useState("")
     const [showFeedbackTitle, setShowFeedbackTitle] = useState(false)
     const [showFeedbackDescription, setShowFeedbackDescription] = useState(false)
+
+    // const [selected, setSelected] = useState([]);
+
+    // const options = {label: props?.dataCategory?.title, value: props?.dataCategory?.value}
 
     return (
         <Modal show={props.show} onHide={props.onHide} size="lg" centered>
@@ -174,6 +184,13 @@ const FormRegister = (props: any) => {
                                     </Col>
                                     <Col>
                                         <Form.Label style={{ fontSize: "0.8em", fontFamily: "Montserrat" }}>Categoria da ameaça</Form.Label>
+                                        {/* <MultiSelect
+                                            options={options}
+                                            value={selected}
+                                            onChange={setSelected}
+                                            labelledBy="Select"
+                                            
+                                        /> */}
                                         <Form.Select
                                             onChange={value => setCategory(value.target.value)}
                                         >

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import Header from "../templates/Header"
 import ListMenace from "../listMenaces/listMenace"
 import ListCategory from "../listCategory/listCategory"
@@ -13,6 +13,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import axios from 'axios';
 import FormRegisterCategory from "../formRegisterCategory/formRegisterCategory"
 import { useQuery } from "react-query"
+import InformationContext from "../../context/information-context"
 
 const server = process.env.REACT_APP_LOCAL;
 
@@ -22,13 +23,17 @@ const MenaceRegister = () => {
 
     const handleCloseMenaceRegister = () => setShowMenaceRegister(false)
     const handleShowMenaceRegister = () => setShowMenaceRegister(true)
+
     const handleCloseCategoryRegister = () => setShowCategoryRegister(false)
     const handleShowCategoryRegister = () => setShowCategoryRegister(true)
+
+    const { setCurrentInfo } = useContext(InformationContext)
 
 
     const getListCategory = () => {
         const data = axios.get(`${server}/getCategory`)
                         .then((response) => {
+                            
                             return response.data
                         })
         return data
@@ -44,12 +49,12 @@ const MenaceRegister = () => {
 
     const category = useQuery("listCategory", getListCategory)
     const menace = useQuery("listMenace", getListMenace)
-
     
+    setCurrentInfo(menace.data)
 
     return (
         <>
-            <FormRegister show={showMenaceRegister} onHide={handleCloseMenaceRegister} title="Cadastrar ameaça" refetch={menace.refetch}/>
+            <FormRegister show={showMenaceRegister} onHide={handleCloseMenaceRegister} title="Cadastrar ameaça" refetch={menace.refetch} dataCategory={category.data}/>
             <FormRegisterCategory show={showCategoryRegister} onHide={handleCloseCategoryRegister} title="Cadastrar categoria" refetch={category.refetch}/>
             <div style={{ backgroundColor: "var(--color-page)" }}>        
                 <div style={{ display: "flex", alignItems: "center" }}>
@@ -57,7 +62,6 @@ const MenaceRegister = () => {
                         <Header title="Ameaças" subtitle="Aqui será possível cadastrar novas ameaças"/>
                     </div>
                 </div>
-                {/* <hr/> */}
                 <div style={{ marginLeft: "15px", marginRight: "15px" }}>
                     <Row className="ms-0 me-1 ContentTabs">
                         <Tabs mountOnEnter={true} unmountOnExit={true} defaultActiveKey={"menace"} id="menacesTabs" style={{ padding: 0, margin: '3vh 0px 0px 0px' }}>
@@ -102,7 +106,7 @@ const MenaceRegister = () => {
                                             </div>
                                         </div>
                                     </Row>
-                                    <Row className="mt-4">
+                                    <Row className="mt-3">
                                         <Col>
                                             <div style={{ marginLeft: "15px" }}>
                                                 <ListCategory currentCategory={category.data} refetch={category.refetch}  isLoading={category.isLoading}/>

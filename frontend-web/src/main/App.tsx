@@ -9,6 +9,7 @@ import Nav from "../components/templates/Nav";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import MapContext from '../context/map-context';
+import InformationContext from '../context/information-context';
 import { QueryClient, QueryClientProvider } from "react-query"
 
 
@@ -17,6 +18,7 @@ const server = process.env.REACT_APP_LOCAL
 const App = () => {
 
     const [geolocation, setGeolocation] = useState<any[]>([])
+    const [currentInfo, setCurrentInfo] = useState<any[]>([])
 
     const queryClient = new QueryClient()
 
@@ -39,10 +41,12 @@ const App = () => {
     return (
         <div className="app">
             <QueryClientProvider client={queryClient}>
-                <MapContext.Provider value={{ geolocation, setGeolocation }}>
-                        <Nav/>
-                        <RoutesApp/>
-                </MapContext.Provider>
+                <InformationContext.Provider value={{ currentInfo, setCurrentInfo }}>
+                    <MapContext.Provider value={{ geolocation, setGeolocation }}>
+                            <Nav/>
+                            <RoutesApp/>
+                    </MapContext.Provider>
+                </InformationContext.Provider>
             </QueryClientProvider>
         </div>
     )

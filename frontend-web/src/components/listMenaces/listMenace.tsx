@@ -145,7 +145,7 @@ const ListMenace = (props: any) => {
                   )
                 }
               })
-              :
+            :
               <Loading visibility={props.isLoading}/>
             }
           </ListGroup>
