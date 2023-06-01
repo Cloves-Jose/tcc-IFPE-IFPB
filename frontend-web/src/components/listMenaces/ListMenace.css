@@ -27,6 +27,11 @@
     padding-bottom: 5px;
 
     white-space: nowrap;
+
+    max-width: 40ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .scroolBar::-webkit-scrollbar {

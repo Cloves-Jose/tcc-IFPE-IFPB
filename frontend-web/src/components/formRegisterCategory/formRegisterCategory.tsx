@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Button, Col, Form, Row, Modal, Container } from "react-bootstrap"
 import { Formik } from "formik"
+import { actualDate } from "../../helpers/DateHour"
 
 import axios from "axios"
 
@@ -8,37 +9,15 @@ const server = process.env.REACT_APP_LOCAL
 
 const FormRegisterCategory = (props: any) => {
 
-    const date = new Date
+    const date = actualDate()
 
     let JsonSend_sector = {}
     
     const [validated, setValidated] = useState(false)
     const [category, setCategory] = useState("")
-    const [actualDate] = useState(date.toISOString())
+    // const [actualDate] = useState(date.toISOString())
     const [showFeedbackTitle, setShowFeedbackTitle] = useState(false)
     
-    // const handleSubit = (event: any) => {
-    //     const form = event.currentTarget;
-    //     if (form.checkValidity() === false) {
-    //         event.preventDefault();
-    //         event.stopPtopagation();
-    //     }
-
-    //     setValidated(true)
-    //     postForm()
-    //     event.preventDefault()
-    // }
-
-    // const postForm = async () => {
-    //     await axios.post(`${server}/registerCategory`, {
-    //         title: category,
-    //         created_at: actualDate
-    //     }).then((res) => {
-    //         console.log(res)
-    //     }).catch((e) => {
-    //         console.error(e)
-    //     })
-    // }
     
     return (
         <Modal show={props.show} onHide={props.onHide} size="lg" centered>
@@ -65,13 +44,13 @@ const FormRegisterCategory = (props: any) => {
                         onSubmit={async () => {
                             JsonSend_sector = {
                                 "title": category,
-                                "created_at": actualDate
+                                "created_at": date
                             }
 
                             await axios.post(`${server}/registerCategory`, JsonSend_sector)
                                 .then((res) => {
-                                    console.log(res)
                                     props.onHide()
+                                    props.refetch()
                                 }).catch((e) => {
                                     console.log(e)
                                 })

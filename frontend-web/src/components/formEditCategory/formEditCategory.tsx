@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Button, Col, Form, Row, Modal, Container } from "react-bootstrap"
 import { Formik } from "formik"
+import { actualDate } from "../../helpers/DateHour"
 
 import axios from "axios"
 
@@ -8,13 +9,13 @@ const server = process.env.REACT_APP_LOCAL
 
 const FormEditCategory = (props: any) => {
 
-    const date = new Date
+    const date = actualDate()
 
     let JsonSend_sector = {}
     
     const [validated, setValidated] = useState(false)
     const [category, setCategory] = useState("")
-    const [actualDate] = useState(date.toISOString())
+    // const [actualDate] = useState(date.toISOString())
     const [showFeedbackTitle, setShowFeedbackTitle] = useState(false)
     const [currentId, setCurrentId] = useState("")
     
@@ -45,13 +46,14 @@ const FormEditCategory = (props: any) => {
                             JsonSend_sector = {
                                 "id": currentId,
                                 "title": category,
-                                "updated_at": date.toISOString()
+                                "updated_at": date
                             }
 
                             await axios.put(`${server}/updateCategory/${values.id}`, JsonSend_sector)
                                 .then((res) => {
                                     console.log(res)
                                     props.onHide()
+                                    props.refetch()
                                 }).catch((e) => {
                                     console.log(e)
                                 })

@@ -9,12 +9,16 @@ import Nav from "../components/templates/Nav";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import MapContext from '../context/map-context';
+import { QueryClient, QueryClientProvider } from "react-query"
+
 
 const server = process.env.REACT_APP_LOCAL
 
 const App = () => {
 
     const [geolocation, setGeolocation] = useState<any[]>([])
+
+    const queryClient = new QueryClient()
 
     /**
      * Pega as coordenadas do mapa e envia via contexto
@@ -34,10 +38,12 @@ const App = () => {
 
     return (
         <div className="app">
-            <MapContext.Provider value={{ geolocation, setGeolocation }}>
-                <Nav/>
-                <RoutesApp/>
-            </MapContext.Provider>
+            <QueryClientProvider client={queryClient}>
+                <MapContext.Provider value={{ geolocation, setGeolocation }}>
+                        <Nav/>
+                        <RoutesApp/>
+                </MapContext.Provider>
+            </QueryClientProvider>
         </div>
     )
 }

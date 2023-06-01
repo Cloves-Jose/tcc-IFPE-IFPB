@@ -7,6 +7,7 @@ import Row from 'react-bootstrap/Row'
 import Modal from 'react-bootstrap/Modal'
 import Container from 'react-bootstrap/esm/Container';
 import { FormControl } from 'react-bootstrap'
+import { actualDate } from "../../helpers/DateHour" 
 
 import axios from "axios"
 
@@ -16,33 +17,19 @@ const FormEdit = (props: any) => {
 
     let JsonSend = {}
 
-    const date = new Date
+    const date = actualDate()
 
     const [validated, setValidated] = useState(false)
-    const [actualDate] = useState(date.toISOString())
     const [dangerousness, setDangerousness] = useState("")
     const [risk, setRisk] = useState("")
 
     const [riskValidator, setRiskValidator] = useState("")
-    const [customerTitle, setCustomerTitle] = useState();
-    const [customerDescription, setCustomerDescription] = useState()
-    const [customerRisk, setCustomerRisk] = useState()
 
     const [id, setCurrentId] = useState("")
     const [title, setCurrentTitle] = useState("")
     const [description, setCurrentDescription] = useState("")
     const [feedbackTitle, setFeedbackTitle] = useState(false)
     const [feedbackDescription, setFeedbackDescription] = useState(false)
-
-    const updateMenace = async (menaceId: any, jsonSend: any) => {
-        await axios.put(`${server}/update/${menaceId}`, jsonSend)
-        .then((res) => {
-            console.log(res)
-        })
-        .catch((e) => {
-            console.error(e)
-        })
-    }
 
     return (
         <Modal show={props.show} onHide={props.onHide} size="lg">
@@ -80,12 +67,13 @@ const FormEdit = (props: any) => {
                                 "id": id,
                                 "title": title,
                                 "description": description,
-                                "updated_at": date.toISOString()
+                                "updated_at": date
                             }
                             console.log(JsonSend)
                             await axios.put(`${server}/update/${values.id}`, JsonSend)
                             .then((res) => {
-                                console.log(res)
+                                props.onHide()
+                                props.callback()
                             })
                             .catch((e) => {
                                 console.error(e)
@@ -221,7 +209,7 @@ const FormEdit = (props: any) => {
                                     <div className="form-text" >Esta será a descrição exibida no aplicativo mobile</div>
                                 </Form.Group>
                             </Row>
-                            <Col style={{ marginLeft: "12px", display: "flex", justifyContent: "space-between" }}>
+                            <Col style={{ marginLeft: "12px", marginRight: "12px", display: "flex", justifyContent: "space-between" }}>
                                 <Button style={{ width: "100px", fontFamily: "Montserrat", fontSize: "0.8em" }} type="submit" form="fooId">Salvar</Button>
                                 <Button style={{ width: "100px", fontFamily: "Montserrat", backgroundColor:"#D3D3D3", fontSize: "0.8em", border: "none" }} variant='light' form="fooId">Cancelar</Button>
                             </Col>

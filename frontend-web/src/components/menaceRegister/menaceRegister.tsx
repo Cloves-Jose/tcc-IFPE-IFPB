@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Header from "../templates/Header"
 import ListMenace from "../listMenaces/listMenace"
 import ListCategory from "../listCategory/listCategory"
@@ -12,96 +12,45 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import axios from 'axios';
 import FormRegisterCategory from "../formRegisterCategory/formRegisterCategory"
+import { useQuery } from "react-query"
 
 const server = process.env.REACT_APP_LOCAL;
 
 const MenaceRegister = () => {
     const [showMenaceRegister, setShowMenaceRegister] = useState(false)
     const [showCategoryRegister, setShowCategoryRegister] = useState(false)
-    const [aux, setAux] = useState([])
-    const [auxCategory, setAuxCategory] = useState([])
-    const [currentMenace, setCurrentMenace] = useState([])
-    const [currentCategory, setCurrentCategory] = useState([])
-    const [currentLimit, setCurrentLimit] = useState(50)
-    const [currentPage, setCurrentPage] = useState(1)
-    const [state, setCurrentState] = useState("")
-    const [currentParams, setCurrentParams] = useState({})
 
     const handleCloseMenaceRegister = () => setShowMenaceRegister(false)
     const handleShowMenaceRegister = () => setShowMenaceRegister(true)
     const handleCloseCategoryRegister = () => setShowCategoryRegister(false)
     const handleShowCategoryRegister = () => setShowCategoryRegister(true)
 
-    const getAllToPagination = (params: { limit: number, page: number }) => {
-        getAllMenaces(params)
-        getAllCategory(params)
+
+    const getListCategory = () => {
+        const data = axios.get(`${server}/getCategory`)
+                        .then((response) => {
+                            return response.data
+                        })
+        return data
     }
+
+    const getListMenace = () => {
+        const data = axios.get(`${server}/getMenace`)
+                        .then((response) => {
+                            return response.data
+                        })
+        return data
+    }
+
+    const category = useQuery("listCategory", getListCategory)
+    const menace = useQuery("listMenace", getListMenace)
+
     
-    const getAllMenaces = async (params: { limit: number; page: number }) => {
-    await axios.get(`${server}/getMenace`)
-    .then((res) => {
-            setAux((state) => {
-            let aux = state.concat(res.data)
-            setAux(aux);
-            setCurrentMenace(aux)
-            return state
-        })
-    }).catch((e) => {
-        console.error(e) 
-        })
-    }
-
-    const getAllCategory = async (params: { limit: number; page: number }) => {
-    await axios.get(`${server}/getCategory`)
-    .then((res) => {
-        setAuxCategory((state) => {
-            let aux = state.concat(res.data)
-            setAuxCategory(aux)
-            setCurrentCategory(aux)
-            return state
-        })
-    }).catch(e => {
-        console.error(e)
-        })
-    }
-
-    const updateListAfterDelete = () => {
-        setAux([])
-        setCurrentPage(1)
-
-        setCurrentState("deleting");
-
-        if (state === "deleting") {
-            setCurrentState("")
-        }
-    }
-
-    const updateListFunction = () => {
-        // setCurrentPage(currentPage + 1)
-        setAux((prevState) => {
-            if (prevState.length > (49 * currentPage)) {
-                setCurrentPage(currentPage + 1)
-                return prevState
-            } else {
-                return prevState
-            }
-        })
-    }
-
-    useEffect(() => {
-    setCurrentParams((params) => {
-        setCurrentState((state) => {
-        getAllToPagination(Object.assign(params, { limit: currentLimit, page: currentPage }))
-        return state
-        })
-        return params
-    })
-    }, [currentPage, currentLimit])
 
     return (
         <>
-            <FormRegister show={showMenaceRegister} onHide={handleCloseMenaceRegister} title="Cadastrar ameaça"/>
-            <FormRegisterCategory show={showCategoryRegister} onHide={handleCloseCategoryRegister} title="Cadastrar categoria"/>
+            <FormRegister show={showMenaceRegister} onHide={handleCloseMenaceRegister} title="Cadastrar ameaça" refetch={menace.refetch}/>
+            <FormRegisterCategory show={showCategoryRegister} onHide={handleCloseCategoryRegister} title="Cadastrar categoria" refetch={category.refetch}/>
             <div style={{ backgroundColor: "var(--color-page)" }}>        
                 <div style={{ display: "flex", alignItems: "center" }}>
                     <div>
@@ -131,7 +80,7 @@ const MenaceRegister = () => {
                                     <Row className="mt-3">
                                         <Col>
                                             <div style={{ marginLeft: "15px" }}>
-                                                <ListMenace currentMenace={aux} updateListAfterDelete={updateListAfterDelete} updateListFunction={updateListFunction}/>
+                                                <ListMenace data={menace.data} refetch={menace.refetch} isLoading={menace.isLoading}/>
                                             </div>
                                         </Col>
                                     </Row>
@@ -156,7 +105,7 @@ const MenaceRegister = () => {
                                     <Row className="mt-4">
                                         <Col>
                                             <div style={{ marginLeft: "15px" }}>
-                                                <ListCategory currentCategory={auxCategory} updateListAfterDelete={updateListAfterDelete}/>
+                                                <ListCategory currentCategory={category.data} refetch={category.refetch}  isLoading={category.isLoading}/>
                                             </div>
                                         </Col>
                                     </Row>

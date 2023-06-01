@@ -6,8 +6,7 @@ import Row from 'react-bootstrap/Row'
 import Modal from 'react-bootstrap/Modal'
 import Container from 'react-bootstrap/Container'
 import { Formik } from "formik"
-import Dropdown from 'react-bootstrap/Dropdown'
-import SplitButton from 'react-bootstrap/SplitButton'
+import { actualDate } from "../../helpers/DateHour"
 
 import axios from "axios"
 
@@ -15,14 +14,13 @@ const server = process.env.REACT_APP_LOCAL
 
 const FormRegister = (props: any) => {
 
-    const date = new Date
+    const date = actualDate()
 
     let JsonSend_sector = {}
 
     const [validated, setValidated] = useState(false)
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
-    const [actualDate] = useState(date.toISOString())
     const [category, setCategory] = useState("")
     const [dangerousness, setDangerousness] = useState("")
     const [risk, setRisk] = useState("")
@@ -72,13 +70,14 @@ const FormRegister = (props: any) => {
                                 "risk": risk,
                                 "category": category,
                                 "description": description,
-                                "created_at": actualDate
+                                "created_at": date
                             }
                             
                             await axios.post(`${server}/register`, JsonSend_sector)
                                 .then((res) => {
                                     console.log(res)
                                     props.onHide()
+                                    props.refetch()
                                 }).catch((e) => {
                                     console.error(e)
                                 })
@@ -207,7 +206,7 @@ const FormRegister = (props: any) => {
                                         <div className="form-text" >Esta será a descrição exibida no aplicativo mobile</div>
                                     </Form.Group>
                                 </Row>
-                                <Col style={{ marginLeft: "12px" }}>
+                                <Col>
                                     <Button style={{ width: "100px", fontFamily: "Montserrat", fontSize: "0.8em" }} type="submit">Salvar</Button>
                                 </Col>
                             </Form>

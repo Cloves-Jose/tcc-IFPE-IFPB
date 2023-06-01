@@ -1,18 +1,14 @@
-import { useMemo, useState, useEffect, useRef, useCallback, FC } from 'react'
+import { useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component';
-import Container from 'react-bootstrap/esm/Container';
-import Row from 'react-bootstrap/esm/Row';
-import Col from 'react-bootstrap/esm/Col';
-import Button from 'react-bootstrap/esm/Button';
-import { ListGroup } from 'react-bootstrap';
-import Popover from 'react-bootstrap/Popover';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import {Row, Col, Button, ListGroup, Popover, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import { faEllipsisV  } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FormEdit from '../formEditMenace/formEditMenace';
 import DeleteModal from '../deleteModal/deleteModal';
 import "./ListMenace.css"
 import axios from 'axios';
+import { useQuery, useMutation } from "react-query"
+import Loading from '../loading/loading';
 
 
 const server = process.env.REACT_APP_LOCAL;
@@ -35,7 +31,7 @@ interface ListMenaceInterface {
 }
 
 
-const ListMenace: FC<ListMenaceInterface> = (props) => {
+const ListMenace = (props: any) => {
 
   const [show, setShow] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
@@ -47,28 +43,26 @@ const ListMenace: FC<ListMenaceInterface> = (props) => {
   const handleCloseDeleteModal = () => setDeleteModal(false)
   const handleShowDeleteModal = () => setDeleteModal(true)
 
+
+  // Deleta ameaças 
+  const deleteMenace = useMutation({
+    mutationFn:(id: any) => {
+      return axios.delete(`${server}/deleteMenace/${id}`)
+                  .then(() => handleCloseDeleteModal())
+    }, onSuccess: (data) => {
+      props.refetch()
+    }, onError: (error) => {
+      console.error(error)
+    }
+  })
+
   const fetchData = () => {
 
-  }
-
-  // console.log(props)
-
-  // Deletar ameaça
-  const deleteMenace = async (menaceId: any) => {
-    await axios.delete(`${server}/deleteMenace/${menaceId}`, {
-    })
-    .then((res) => {
-      handleCloseDeleteModal()
-      props.updateListAfterDelete()
-    })
-    .catch((e) => {
-      console.error(e)
-    })
   }
   
   const popover = () => {
     return (
-      <Popover style={{ zIndex: '500', backgroundColor: "var(--color-grey)", border: 'none', color: '#40484E', fontFamily: 'Montserrat', fontSize: '0.8em' }}>
+      <Popover style={{zIndex: '500', backgroundColor: "var(--color-grey)", border: 'none', color: '#40484E', fontFamily: 'Montserrat', fontSize: '0.8em' }}>
         <Popover.Body style={{ padding: "0px" }}>
           <Button className="m-2" style={{ backgroundColor: 'transparent', border: 'none', color: 'black', fontSize: 'inherit' }} onClick={handleShow}>Editar informações</Button>
             <hr style={{ margin: "0px" }} />
@@ -80,8 +74,8 @@ const ListMenace: FC<ListMenaceInterface> = (props) => {
 
   return (
     <>
-    <FormEdit show={show} onHide={handleClose} title="Editar ameaça" data={menaceInfo}/>
-    <DeleteModal title="Deletar ameaça" body={`Deseja deletar à ameaça ${menaceInfo?.title}?`} show={deleteModal} onHide={handleCloseDeleteModal} confirmationButton="OK" cancelButton="Cancelar" onClickConfirmation={() => deleteMenace(menaceInfo?.id)} onClickCancel={handleCloseDeleteModal}/>
+    <FormEdit show={show} onHide={handleClose} title="Editar ameaça" data={menaceInfo} callback={props.refetch}/>
+    <DeleteModal title="Deletar ameaça" body={`Deseja deletar à ameaça ${menaceInfo?.title}?`} show={deleteModal} onHide={handleCloseDeleteModal} confirmationButton="OK" cancelButton="Cancelar" onClickConfirmation={() => deleteMenace.mutate(menaceInfo?.id)} onClickCancel={handleCloseDeleteModal}/>
     <div>
       <ListGroup variant='flush'>
         <ListGroup.Item>
@@ -97,8 +91,8 @@ const ListMenace: FC<ListMenaceInterface> = (props) => {
       </ListGroup>
     </div>
       <InfiniteScroll
-        dataLength={props.currentMenace.length}
-        next={props.updateListFunction}
+        dataLength={props.data == undefined ? <></> : props.data.length}
+        next={fetchData}
         hasMore={true}
         loader={<h4></h4>}
         height={300}
@@ -107,39 +101,53 @@ const ListMenace: FC<ListMenaceInterface> = (props) => {
       >
         {
           <ListGroup variant='flush'>
-            {props.currentMenace.map((item: Menace) => {
-              if(item.deleted_at === null) {
-                return (
-                  <ListGroup.Item>
-                    <Row>
-                      <Col className='gridRow'>
-                        #{item.id}
-                      </Col>
-                      <Col className='gridRow'>
-                        {item.title}
-                      </Col>
-                      <Col className='gridRow'>
-                        {item.description}
-                      </Col>
-                      <Col className='gridRow'>
-                        {item.dangerousness}
-                      </Col>
-                      <Col className='gridRow'>
-                        {item.category}
-                      </Col>
-                      <Col className='gridRow'>
-                      <OverlayTrigger rootClose={true} trigger={['click']} placement="left" overlay={popover()}>
-                        <Button id={"button*ID*" + item.id + "button*ID*" + item.title} variant='light' className='nopadding d-flex justify-content-start align-self-center' style={{ marginTop: '', border: 'none', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: "transparent" }} onClick={() => setMenaceInfo(item)}>
-                           <FontAwesomeIcon icon={faEllipsisV} style={{ color: "#848884" }}/>
-                         </Button>
-                       </OverlayTrigger>
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
-                )
-              }
-            })
-          }
+            {
+            props.data !== undefined ? 
+              props.data.map((item: Menace) => {
+                if(item.deleted_at === null) {
+                  return (
+                    <ListGroup.Item key={item.id}>
+                      <Row>
+                        <Col className='gridRow'>
+                          #{item.id}
+                        </Col>
+                        <Col className='gridRow'>
+                          {item.title}
+                        </Col>
+                        <Col className='gridRow'>
+                          <OverlayTrigger
+                            key='top'
+                            placement='top'
+                            overlay={
+                              <Tooltip id='tooltip' style={{ backgroundColor: "transparent" }}>
+                                {item.description}
+                              </Tooltip>
+                            }
+                          >
+                            <span className='gridRow' style={{ fontSize: "1em" }}>{item.description}</span>
+                          </OverlayTrigger>
+                        </Col>
+                        <Col className='gridRow'>
+                          {item.dangerousness}
+                        </Col>
+                        <Col className='gridRow'>
+                          {item.category}
+                        </Col>
+                        <Col className='gridRow'>
+                        <OverlayTrigger rootClose={true} trigger={['click']} placement="left" overlay={popover()}>
+                          <Button variant='light' className='nopadding d-flex justify-content-start align-self-center' style={{ marginTop: '', border: 'none', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: "transparent" }} onClick={() => setMenaceInfo(item)}>
+                            <FontAwesomeIcon icon={faEllipsisV} style={{ color: "#848884" }}/>
+                          </Button>
+                        </OverlayTrigger>
+                        </Col>
+                      </Row>
+                    </ListGroup.Item>
+                  )
+                }
+              })
+              :
+              <Loading visibility={props.isLoading}/>
+            }
           </ListGroup>
         }
       </InfiniteScroll>

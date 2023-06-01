@@ -13,7 +13,7 @@ const Nav = () => {
             <nav>
                 <MenuItem href="/" icon={faHome} title="Home"/>
                 <MenuItem href="/menaceRegister" icon={faShield} title="Ameaças"/>
-                <MenuItem href="/#" icon={faClockRotateLeft} title="Histórico de ameaça"/>
+                <MenuItem href="/menaceHistory" icon={faClockRotateLeft} title="Histórico"/>
                 <MenuItem href="/menaceReport" icon={faFileCircleCheck} title="Relatório de ameaças"/>
             </nav>
         </aside>

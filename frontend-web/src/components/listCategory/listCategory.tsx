@@ -5,8 +5,11 @@ import { faEllipsisV  } from "@fortawesome/free-solid-svg-icons";
 import InfiniteScroll from "react-infinite-scroll-component"
 import DeleteModal from '../deleteModal/deleteModal';
 import FormEditCategory from '../formEditCategory/formEditCategory';
+import { formatDate } from '../../helpers/DateHour'
 import "./ListCategory.css"
 import axios from 'axios'
+import Loading from '../loading/loading';
+import { useMutation } from 'react-query';
 
 const server = process.env.REACT_APP_LOCAL
 
@@ -34,23 +37,18 @@ const ListCategory = (props: any) => {
     const handleCloseDeleteModal = () => setShowDeleteModal(false)
     const handleShowDeleteModal = () => setShowDeleteModal(true)
 
-    const formatDate = (date: any) => {
-        const result = new Date(date).toLocaleDateString('pt-BR')
 
-        return result
-    }
+    const deleteCategory = useMutation({
+        mutationFn:(id: any) => {
+            return axios.delete(`${server}/deleteCategory/${id}`)
+                        .then(() => handleCloseDeleteModal())
+        }, onSuccess: (data) => {
+            props.refetch()
+        }, onError: (error) => {
+            console.error(error)
+        }
+    })
 
-    const deleteCategory = async (menaceId: any) => {
-        await axios.delete(`${server}/deleteCategory/${menaceId}`, {
-        })
-        .then((res) => {
-            handleCloseDeleteModal()
-            props.updateListAfterDelete()
-        })
-        .catch((e) => {
-            console.error(e)
-        })
-    }
 
     const popover = () => {
         return (
@@ -66,8 +64,8 @@ const ListCategory = (props: any) => {
 
     return (
         <>  
-            <FormEditCategory show={showEditModal} onHide={handleCloseEditModal} data={categoryInfo} title="Editar categoria"/>
-            <DeleteModal title="Deletar categoria" body={`Deseja deletar à categoria ${categoryInfo?.title}?`} show={showDeleteModal} onHide={handleCloseDeleteModal} confirmationButton="OK" cancelButton="Cancelar" onClickConfirmation={() => deleteCategory(categoryInfo?.id)} onClickCancel={handleCloseDeleteModal}/>
+            <FormEditCategory show={showEditModal} onHide={handleCloseEditModal} data={categoryInfo} title="Editar categoria" refetch={props.refetch}/>
+            <DeleteModal title="Deletar categoria" body={`Deseja deletar à categoria ${categoryInfo?.title}?`} show={showDeleteModal} onHide={handleCloseDeleteModal} confirmationButton="OK" cancelButton="Cancelar" onClickConfirmation={() => deleteCategory.mutate(categoryInfo?.id)} onClickCancel={handleCloseDeleteModal}/>
             <div>
                 <ListGroup variant="flush">
                     <ListGroup.Item>
@@ -82,7 +80,7 @@ const ListCategory = (props: any) => {
                 </ListGroup>
             </div>
             <InfiniteScroll
-                dataLength={props.currentCategory.length}
+                dataLength={props.currentCategory == undefined ? <></> : props.currentCategory.length}
                 next={fetchData}
                 hasMore={true}
                 loader={<h4></h4>}
@@ -92,43 +90,48 @@ const ListCategory = (props: any) => {
             >
                 {
                     <ListGroup variant="flush">
-                        {props.currentCategory.map((item: Category) => {
-                            let createDate = formatDate(item.created_at)
-                            let updateDate = formatDate(item.updated_at)
-                            if(item.deleted_at === null) {
-                                return (
-                                    <ListGroup.Item key={item.id}>
-                                        <Row>
-                                            <Col className='gridRow'>
-                                                #{item.id}
-                                            </Col>
-                                            <Col className='gridRow'>
-                                                {item.title}
-                                            </Col>
-                                            <Col className='gridRow'>
-                                                {createDate}
-                                            </Col>
-                                            {
-                                                item.updated_at === null ?
+                        {
+                        props.currentCategory !== undefined ?
+                            props.currentCategory.map((item: Category) => {
+                                let createDate = formatDate(item.created_at, "pt-BR")
+                                let updateDate = formatDate(item.updated_at, "pt-BR")
+                                if(item.deleted_at === null) {
+                                    return (
+                                        <ListGroup.Item key={item.id}>
+                                            <Row>
                                                 <Col className='gridRow'>
-                                                    --
-                                                </Col> :
-                                                <Col className='gridRow'>
-                                                    {updateDate}
+                                                    #{item.id}
                                                 </Col>
-                                            }
-                                            <Col className='gridRow'>
-                                                <OverlayTrigger rootClose={true} trigger={['click']} placement="left" overlay={popover()}>
-                                                    <Button id={"button*ID*" + item.id + "button*ID*" + item.title} variant='light' className='nopadding d-flex justify-content-start align-self-center' style={{ marginTop: '', border: 'none', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: "transparent" }} onClick={() => setCategoryInfo(item)}>
-                                                        <FontAwesomeIcon icon={faEllipsisV} style={{ color: "#848884" }}/>
-                                                    </Button>
-                                                </OverlayTrigger>
-                                            </Col>
-                                        </Row>
-                                    </ListGroup.Item>
-                                )
-                            }
-                        })}
+                                                <Col className='gridRow'>
+                                                    {item.title}
+                                                </Col>
+                                                <Col className='gridRow'>
+                                                    {createDate}
+                                                </Col>
+                                                {
+                                                    item.updated_at === null ?
+                                                    <Col className='gridRow'>
+                                                        --
+                                                    </Col> :
+                                                    <Col className='gridRow'>
+                                                        {updateDate}
+                                                    </Col>
+                                                }
+                                                <Col className='gridRow'>
+                                                    <OverlayTrigger rootClose={true} trigger={['click']} placement="left" overlay={popover()}>
+                                                        <Button id={"button*ID*" + item.id + "button*ID*" + item.title} variant='light' className='nopadding d-flex justify-content-start align-self-center' style={{ marginTop: '', border: 'none', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: "transparent" }} onClick={() => setCategoryInfo(item)}>
+                                                            <FontAwesomeIcon icon={faEllipsisV} style={{ color: "#848884" }}/>
+                                                        </Button>
+                                                    </OverlayTrigger>
+                                                </Col>
+                                            </Row>
+                                        </ListGroup.Item>
+                                    )
+                                }
+                            })
+                            :
+                            <Loading visibility={props.isLoading}/>
+                        }
                     </ListGroup>
                 }
             </InfiniteScroll>
