@@ -64,6 +64,7 @@ export default props => {
                 sex: sex,
                 reside_menace: checkbox,
                 description: description,
+                title_menace: props.route.params.title,
                 image: "image",
                 latitude: latitude,
                 longitude: longitude,

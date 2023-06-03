@@ -37,22 +37,25 @@ export default props => {
      * da lista
      */
     _renderItem = (item) => {
-        return(
-            <>
-                <ListItem 
-                    key={item.id} 
-                    bottomDivider
-                    onPress={() => props.navigation.navigate("Info", item)}
-                    >
-                    <Avatar source={{uri: item.photo}}/>
-                    <ListItem.Content>
-                        <ListItem.Title style={styles.listTitle}>{item.title}</ListItem.Title>
-                        <ListItem.Subtitle style={styles.listSubtitle}>{item.description}</ListItem.Subtitle>
-                    </ListItem.Content>
-                    <ListItem.Chevron/>
-                </ListItem>
-            </>
-        )
+
+        if(item.deleted_at == null) {
+            return(
+                <>
+                    <ListItem 
+                        key={item.id} 
+                        bottomDivider
+                        onPress={() => props.navigation.navigate("Info", item)}
+                        >
+                        <Avatar source={{uri: item.photo}}/>
+                        <ListItem.Content>
+                            <ListItem.Title style={styles.listTitle}>{item.title}</ListItem.Title>
+                            <ListItem.Subtitle style={styles.listSubtitle}>{item.description}</ListItem.Subtitle>
+                        </ListItem.Content>
+                        <ListItem.Chevron/>
+                    </ListItem>
+                </>
+            )
+        }
     }
 
     /**
