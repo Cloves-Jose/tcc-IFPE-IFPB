@@ -11,6 +11,7 @@ import axios from 'axios';
 import MapContext from '../context/map-context';
 import InformationContext from '../context/information-context';
 import { QueryClient, QueryClientProvider } from "react-query"
+import { ReactQueryDevtools } from "react-query/devtools"
 
 
 const server = process.env.REACT_APP_LOCAL
@@ -25,22 +26,23 @@ const App = () => {
     /**
      * Pega as coordenadas do mapa e envia via contexto
      */
-    useEffect(() => {
-        const getGeolocation = async () => {
-            await axios.get(`${server}/getGeolocation`)
-            .then((res) => {
-                setGeolocation(res.data)
-            }) 
-            .catch((e) => {
-                console.error(e)
-            })
-        }
-        getGeolocation()
-    }, [])
+    // useEffect(() => {
+    //     const getGeolocation = async () => {
+    //         await axios.get(`${server}/getGeolocation`)
+    //         .then((res) => {
+    //             setGeolocation(res.data)
+    //         }) 
+    //         .catch((e) => {
+    //             console.error(e)
+    //         })
+    //     }
+    //     getGeolocation()
+    // }, [])
 
     return (
         <div className="app">
             <QueryClientProvider client={queryClient}>
+                {/* <ReactQueryDevtools initialIsOpen={false}/> */}
                 <InformationContext.Provider value={{ currentInfo, setCurrentInfo }}>
                     <MapContext.Provider value={{ geolocation, setGeolocation }}>
                             <Nav/>
