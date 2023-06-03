@@ -49,7 +49,7 @@ module.exports = app => {
      */
     const updateMenace = (req, res) => {
         const menace = { ...req.body }
-        console.log(menace)
+        // console.log(menace)
         if(menace.id) {
             app.db('menace')
                 .update(menace)
@@ -67,7 +67,7 @@ module.exports = app => {
      * @returns 
      */
     const save = (req, res) => {
-        console.log(req.body)
+        // console.log(req.body)
         // if(!req?.body?.name?.trim()) {
         //     return res.status(400).send('Título é um campo obrigatório')
         // }

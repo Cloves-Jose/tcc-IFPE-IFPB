@@ -8,6 +8,7 @@ exports.up = function(knex) {
         table.string('age').notNull(),
         table.string('sex').notNull(),
         table.boolean('reside_menace').notNull(),
+        table.string('title_menace').notNull(),
         table.string('description').nullable(),
         table.string('image').nullable(),
         table.string('latitude').notNull(),

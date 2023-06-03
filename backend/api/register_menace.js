@@ -13,6 +13,7 @@ module.exports = app => {
                 created_at: 'created_at',
                 updated_at: 'updated_at',
                 deleted_at: 'deleted_at',
+                title_menace: 'title_menace',
                 menace_id: 'menace_id',
                 description: 'description'
             })
@@ -21,7 +22,7 @@ module.exports = app => {
                     return {
                         type: "Feature",
                         properties: {
-                            title: item.menace_id,
+                            title: item.title_menace,
                             description: item.description
                         },
                         geometry: {
@@ -58,6 +59,7 @@ module.exports = app => {
                 age: req.body.age,
                 sex: req.body.sex,
                 reside_menace: req.body.reside_menace,
+                title_menace: req.body.title_menace,
                 description: req.body.description,
                 image: req.body.image,
                 latitude: req.body.latitude,

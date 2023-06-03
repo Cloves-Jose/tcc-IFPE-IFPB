@@ -23,4 +23,6 @@ module.exports = app => {
      */
     app.post('/registerCategory', app.api.category.save)
     app.get('/getCategory', app.api.category.getCategory)
+    app.put('/updateCategory/:id', app.api.category.updateCategory)
+    app.delete('/deleteCategory/:id', app.api.category.deleteCategory)
 }
