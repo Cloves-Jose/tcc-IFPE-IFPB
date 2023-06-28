@@ -13,11 +13,21 @@ import axios from "axios"
 
 const server = process.env.REACT_APP_LOCAL
 
-// const options = [
-//     { label: "Grapes 🍇", value: "grapes" },
-//     { label: "Mango 🥭", value: "mango" },
-//     { label: "Strawberry 🍓", value: "strawberry" },
-//   ];
+export interface Category {
+    label: string,
+    value: string
+}
+
+export interface Grade {
+    label: string,
+    value: string
+}
+
+export interface Photo {
+    lastModified: number,
+    name: string
+}
+
 const FormRegister = (props: any) => {
 
     const date = actualDate()
@@ -27,17 +37,39 @@ const FormRegister = (props: any) => {
     const [validated, setValidated] = useState(false)
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
-    const [category, setCategory] = useState("")
     const [dangerousness, setDangerousness] = useState("")
     const [risk, setRisk] = useState("")
     const [showFeedbackTitle, setShowFeedbackTitle] = useState(false)
     const [showFeedbackDescription, setShowFeedbackDescription] = useState(false)
+    const [image, setImage] = useState("")
 
-    // const [selected, setSelected] = useState([]);
+    const [selected, setSelected] = useState<Category[]>([]);
+    const [selectedGrade, setSelectedGrade] = useState<Grade[]>([])
 
-    // const options = {label: props?.dataCategory?.title, value: props?.dataCategory?.value}
+    const options = props?.dataCategory?.map((item: any) => {
+        return { label: item.title, value: item.id }
+    })
+
+    const optionsGrade = [
+        { label: "Baixo", value: "Baixo" },
+        { label: "Médio", value: "Médio" },
+        { label: "Alto", value: "Alto" },
+    ]
+
+    const clearInputs = () => {
+        setTitle("")
+        setDescription("")
+        setDangerousness("")
+        setRisk("")
+        setShowFeedbackTitle(false)   
+        setShowFeedbackDescription(false) 
+        setSelected([])
+        setSelectedGrade([])
+    }
+    
 
     return (
+        console.log(image, "Aqui"),
         <Modal show={props.show} onHide={props.onHide} size="lg" centered>
             <Modal.Header closeButton>
                 <Modal.Title style={{ color: "var(--color-blue)", fontWeight: "400", fontFamily: "Montserrat" }}>{props.title}</Modal.Title>
@@ -45,11 +77,12 @@ const FormRegister = (props: any) => {
             <Modal.Body>
                 <Container>
                     <Formik
-                        initialValues={{ title: '', description: '' }}
+                        initialValues={{ title: '', description: '', img: '' }}
                         validate={values => {
                             let errors:any = {}
                             setTitle(values.title)
                             setDescription(values.description)
+                            setImage(values.img)
 
                             if (!values.title) {
                                 errors["title"] = 'Preencha este campo corretamente!'
@@ -75,19 +108,20 @@ const FormRegister = (props: any) => {
                         onSubmit={async () => {
                             JsonSend_sector = {
                                 "title": title,
-                                "photo": "https://img.freepik.com/fotos-gratis/tiro-de-angulo-alto-de-duas-escavadeiras-em-um-canteiro-de-obras_181624-7771.jpg?w=1380&t=st=1675361902~exp=1675362502~hmac=22859b6ce31bdbc02a28630f129f0eb20a7ed927e7754fd1a6b19b299c878e53",
-                                "dangerousness": dangerousness,
+                                "photo": image,
+                                "dangerousness": selectedGrade[0]?.value,
                                 "risk": risk,
-                                "category": category,
+                                "category": selected[0]?.label,
                                 "description": description,
                                 "created_at": date
                             }
                             
                             await axios.post(`${server}/register`, JsonSend_sector)
                                 .then((res) => {
-                                    console.log(res)
                                     props.onHide()
                                     props.refetch()
+                                    clearInputs()
+
                                 }).catch((e) => {
                                     console.error(e)
                                 })
@@ -120,7 +154,7 @@ const FormRegister = (props: any) => {
                                                 value={values.title}
                                             />
                                             <Form.Control.Feedback type="valid">Preenchido corretamente!</Form.Control.Feedback>
-                                            <Form.Control.Feedback type="invalid" id="feedbacktitle">{errors.title}</Form.Control.Feedback>
+                                            <Form.Control.Feedback type="invalid" id="feedbacktitle">Preencha o título da ameaça</Form.Control.Feedback>
                                         <div className="form-text" >Este será o título exibido no aplicativo mobile</div>
                                     </Form.Group>
                                 </Row>
@@ -131,6 +165,9 @@ const FormRegister = (props: any) => {
                                             <Form.Control
                                                 required
                                                 type="file"
+                                                onChange={(e: any) => setImage(e.target.files[0])}
+                                                onBlur={handleBlur}
+                                                // value={values.img}
                                             />
                                             <Form.Control.Feedback>Preenchido corretamente!</Form.Control.Feedback>
                                             <Form.Control.Feedback type="invalid">Por favor preencha corretamente o campo</Form.Control.Feedback>
@@ -140,14 +177,19 @@ const FormRegister = (props: any) => {
                                     <Col>
                                         <Form.Group>
                                             <Form.Label style={{ fontSize: "0.8em", fontFamily: "Montserrat" }}>Grau de ameaça</Form.Label>
-                                                <Form.Select 
-                                                    
-                                                    onChange={value => setDangerousness(value.target.value)}
-                                                >
-                                                    <option value="Baixa" >Baixa</option>
-                                                    <option value="Médio">Média</option>
-                                                    <option value="Alta">Alta</option>
-                                                </Form.Select>
+                                                <MultiSelect
+                                                    options={optionsGrade}
+                                                    value={selectedGrade}
+                                                    onChange={setSelectedGrade}
+                                                    labelledBy="Select"
+                                                    hasSelectAll={false}
+                                                    closeOnChangedValue={true}
+                                                    isCreatable={true}
+                                                    overrideStrings={{
+                                                        "allItemsAreSelected": selectedGrade[0]?.label,
+                                                        "selectSomeItems": "Selecione o grau da ameaça"
+                                                    }}
+                                                />
                                             <Form.Control.Feedback>Preenchido corretamente!</Form.Control.Feedback>
                                             <div className="form-text">Esta informação será de uso interno</div>
                                         </Form.Group>
@@ -184,20 +226,25 @@ const FormRegister = (props: any) => {
                                     </Col>
                                     <Col>
                                         <Form.Label style={{ fontSize: "0.8em", fontFamily: "Montserrat" }}>Categoria da ameaça</Form.Label>
-                                        {/* <MultiSelect
+                                        <MultiSelect
                                             options={options}
                                             value={selected}
                                             onChange={setSelected}
-                                            labelledBy="Select"
-                                            
-                                        /> */}
-                                        <Form.Select
-                                            onChange={value => setCategory(value.target.value)}
-                                        >
-                                            <option value="Baixa" >Baixa</option>
-                                            <option value="Médio">Média</option>
-                                            <option value="Alta">Alta</option>
-                                        </Form.Select> 
+                                            hasSelectAll={false}
+                                            closeOnChangedValue={true}
+                                            labelledBy="Select" 
+                                            overrideStrings = {{
+                                                "allItemsAreSelected": selected[0]?.label,
+                                                "clearSearch": "Clear Search",
+                                                "clearSelected": "Clear Selected",
+                                                "noOptions": "No options",
+                                                "search": "Search",
+                                                "selectAll": "Select All",
+                                                "selectAllFiltered": "Select All (Filtered)",
+                                                "selectSomeItems": "Selecione a categoria da ameaça",
+                                                "create": "Create",
+                                            }} 
+                                        />
                                         <div className="form-text">Esta informação será de uso interno</div>
                                     </Col>
                                 </Row>

@@ -23,6 +23,7 @@ const MenaceHistory = () => {
                         .then((response) => {
                             return response.data
                         })
+        return data
     }
 
     const menace = useQuery("listMenaceHistory", getListMenaceHistory)
@@ -54,7 +55,7 @@ const MenaceHistory = () => {
                                     <Row className="mt-5">
                                         <Col>
                                             <div style={{ marginLeft: "15px" }}>
-                                                <ListHistoryCategory/>
+                                                <ListHistoryCategory data={category}/>
                                             </div>
                                         </Col>
                                     </Row>
