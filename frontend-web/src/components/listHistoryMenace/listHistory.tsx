@@ -1,4 +1,4 @@
-import {Row, Col, Button, ListGroup, Popover, OverlayTrigger, Tooltip} from 'react-bootstrap';
+import {Row, Col, ListGroup} from 'react-bootstrap';
 import "./ListHistory.css"
 import InformationContext from '../../context/information-context';
 import InfiniteScroll from 'react-infinite-scroll-component';

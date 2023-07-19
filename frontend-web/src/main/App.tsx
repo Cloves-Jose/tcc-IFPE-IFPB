@@ -12,6 +12,9 @@ import MapContext from '../context/map-context';
 import InformationContext from '../context/information-context';
 import { QueryClient, QueryClientProvider } from "react-query"
 import { ReactQueryDevtools } from "react-query/devtools"
+// import LoginModal from '../components/loginModal/loginModal';
+import LoginPage from '../components/loginPage/loginPage';
+import UserRegister from '../components/userRegister/userRegister';
 
 
 const server = process.env.REACT_APP_LOCAL
@@ -20,6 +23,7 @@ const App = () => {
 
     const [geolocation, setGeolocation] = useState<any[]>([])
     const [currentInfo, setCurrentInfo] = useState<any[]>([])
+    const [token, setToken] = useState()
 
     const queryClient = new QueryClient()
 
@@ -38,6 +42,12 @@ const App = () => {
     //     }
     //     getGeolocation()
     // }, [])
+
+    if (!token) {
+        return (
+            <LoginPage/>
+        )
+    }
 
     return (
         <div className="app">

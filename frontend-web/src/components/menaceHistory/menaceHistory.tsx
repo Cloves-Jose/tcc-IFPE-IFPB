@@ -1,7 +1,7 @@
 import Header from "../templates/Header"
 import ListHistory from "../listHistoryMenace/listHistory"
 import ListHistoryCategory from "../listHistoryCategory/listHistoryCategory";
-import {Row, Col, Button, ListGroup, Popover, OverlayTrigger, Tooltip, Container, Tab, Tabs} from 'react-bootstrap';
+import {Row, Col, Container, Tab, Tabs} from 'react-bootstrap';
 import axios from "axios";
 import { useQuery } from "react-query";
 

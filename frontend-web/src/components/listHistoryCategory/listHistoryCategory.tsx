@@ -3,6 +3,7 @@ import { ListGroup, Row, Col} from "react-bootstrap"
 import "./ListHistoryCategory.css"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { formatDate } from "../../helpers/DateHour"
+import Loading from "../loading/loading"
 
 export type Category = {
     id: string,
@@ -73,7 +74,7 @@ const ListHistoryCategory = (props: any) => {
                                     }
                                 })
                             : 
-                            <></>
+                            <Loading visibility={props.data.isLoading}/>
                         }
                     </ListGroup>
                 }

@@ -50,15 +50,7 @@ const Map = () => {
         })
 
         if(data !== undefined) {
-            data?.map(async (feature:any) => {
-
-                // await axios.get(`https://geocode.maps.co/reverse?lat=${feature.geometry.coordinates[1]}&lon=${feature.geometry.coordinates[0]}`)
-                //             .then((response) => {
-                //                 setAddres(response.data.address.road == null ? response.data.address.neighbourhood : response.data.address.suburb)
-                //             })
-                //             .catch((e) => {
-                //                 console.error(e)
-                //             })
+            data?.filter((item: any) => item.date.deleted_at === null).map(async (feature:any) => {
                 new mapboxgl.Marker().setLngLat(feature.geometry.coordinates).setPopup(new mapboxgl.Popup().setHTML(feature.properties.title)).addTo(mapboxMap)
             })
         } 
@@ -72,10 +64,17 @@ const Map = () => {
     }, [renderMap])
 
     return (
-        
-        <div>
-            <div ref={mapNode} className="map-container"/>
-        </div>
+        <>
+            {data !== undefined ?
+                <div style={{ backgroundColor: "var(--color-page)" }}>
+                    <div ref={mapNode} className="map-container"/>
+                </div>
+                :
+                <div style={{ backgroundColor: "var(--color-page)" }}>
+                    <Loading visibility={isLoading}/>
+                </div>
+            }
+        </>
     )
 }
 

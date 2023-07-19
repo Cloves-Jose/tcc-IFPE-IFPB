@@ -46,9 +46,10 @@ const FormRegister = (props: any) => {
     const [selected, setSelected] = useState<Category[]>([]);
     const [selectedGrade, setSelectedGrade] = useState<Grade[]>([])
 
-    const options = props?.dataCategory?.map((item: any) => {
-        return { label: item.title, value: item.id }
-    })
+    const options = props?.dataCategory?.filter((item: any) => item.deleted_at === null)
+        .map((item: any) => {
+            return { label: item.title, value: item.value }
+        })
 
     const optionsGrade = [
         { label: "Baixo", value: "Baixo" },
@@ -69,7 +70,6 @@ const FormRegister = (props: any) => {
     
 
     return (
-        console.log(image, "Aqui"),
         <Modal show={props.show} onHide={props.onHide} size="lg" centered>
             <Modal.Header closeButton>
                 <Modal.Title style={{ color: "var(--color-blue)", fontWeight: "400", fontFamily: "Montserrat" }}>{props.title}</Modal.Title>
